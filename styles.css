@@ -1,3 +1,12 @@
+@font-face {
+    font-family: 'CMU Serif';
+    src: url('fonts/CMUSerif-Roman.woff2') format('woff2'),
+        url('fonts/CMUSerif-Roman.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -139,7 +148,6 @@
 
 .button:hover {
     background: #171935;
-    /* color:#030303; */
     transition: all 0.4s ease-in-out;
 }
 
@@ -306,31 +314,39 @@
 
 .hidden-link {
     text-decoration: none;
-    color: #8aadff;
+    color: transparent;
     position: relative;
-    opacity: 0;
+    opacity: 1;
     text-decoration: none;
     cursor: default;
+    transform: scale(1);
+    display: inline-block;
+    border-bottom: 2px dashed rgba(138, 173, 255, 0.3);
 }
 
 .hidden-link:hover {
-    opacity: 1;
-    transition: all 0.4s ease;
+    color: #8aadff;
+    transform: scale(1.03);
+    transition: all 0.4s ease-in-out;
 }
 
 .hidden-link-hyper {
     text-decoration: none;
-    color: #8aadff;
+    color: transparent;
     position: relative;
-    opacity: 0;
+    opacity: 1;
     text-decoration: none;
     cursor: pointer;
+    display: inline-block;
+    border-bottom: 2px dashed rgba(138, 173, 255, 0.3);
 }
 
 .hidden-link-hyper:hover {
-    opacity: 1;
-    transition: all 0.4s ease;
+    color: #8aadff;
+    transform: scale(1.03);
+    transition: all 0.4s ease-in-out;
 }
+
 
 @media screen and (max-width: 980px) {
     /* main content stuff */
@@ -359,5 +375,24 @@
 
 .footer__content {
     color: #f8f8f8;
-    font-size: 2vh;
+    font-size: 1.5vh;
+    width: 100%;
+    text-align: center;
+}
+
+#footer__logo {
+    background-color: #FFFFFF;
+    background-image: linear-gradient(to top, #b2b2b2 0%, #f8f8f8 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 2.5vh;
+    font-weight: normal;
+    justify-content: center;
 }
