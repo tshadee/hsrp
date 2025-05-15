@@ -46,7 +46,7 @@
 /* Navigation bar desktop mode */
 .navbar {
     background: #030303;
-    height: 10vh;
+    height: 8vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -59,7 +59,7 @@
 .navbar__container {
     display: flex;
     justify-content: space-between;
-    height: 10vh;
+    height: 8vh;
     z-index: 1;
     width: 100%;
     max-width: 2000px;
@@ -80,8 +80,14 @@
     align-items: center;
     cursor: pointer;
     text-decoration: none;
-    font-size: 300%;
+    font-size: 6vh;
     font-weight: normal;
+}
+
+.navbar__logo-img {
+    height: 6vh;
+    width: 6vh;
+    margin-right: 1vh;
 }
 
 .navbar__menu {
@@ -92,7 +98,7 @@
 }
 
 .navbar__item {
-    height: 10vh;
+    height: 8vh;
 }
 
 .navbar__links {
@@ -103,7 +109,7 @@
     text-decoration: none;
     padding: 0 1rem;
     height: 100%;
-    font-size: 130%;
+    font-size: 2.5vh;
     cursor: pointer;
 }
 
@@ -127,7 +133,7 @@
     outline: none;
     background-color: #111111;
     color: #fff;
-    font-size: 130%;
+    font-size: 2.5vh;
     cursor: pointer;
 }
 
@@ -155,7 +161,7 @@
     .navbar__container {
         display: flex;
         justify-content: space-between;
-        height: 10vh;
+        height: 8vh;
         z-index: 1;
         width: 100%;
         max-width: 1300px;
@@ -168,7 +174,7 @@
         margin: 0;
         width: 100%;
         position: absolute;
-        top: 10vh;
+        top: 8vh;
         opacity: 0;
         transition: all 0.5s ease-in-out;
         height: 30vh;
@@ -262,7 +268,7 @@
 }
 
 .main__container {
-    height: 80vh;
+    height: 84vh;
     background: linear-gradient(to top, #030303 0%,#171935 100%),
     repeating-linear-gradient(45deg,
             rgba(255, 255, 255, 0.01) 0px,
@@ -275,7 +281,7 @@
     margin: 0 auto;
     z-index: 1;
     width: 100%;
-    max-width: 2000px;
+    max-width: 100%;
     display: flex;
     padding: 0 10%;
     animation: fadeInOnly calc(var(--a-duration)*4) ease-in-out forwards;
@@ -337,7 +343,7 @@
 }
 
 .footer__container {
-    height: 10vh;
+    height: 8vh;
     background-color: #030303;
     width: 100%;
     display: flex;
@@ -353,4 +359,5 @@
 
 .footer__content {
     color: #f8f8f8;
+    font-size: 2vh;
 }
