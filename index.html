@@ -21,24 +21,24 @@
             </div>
             <ul class="navbar__menu">
                 <li class="navbar__item">
-                    <a href="/" class="navbar__links transition-default">
+                    <div class="navbar__links transition-default">
                         home
-                    </a>
+                    </div>
                 </li>
                 <li class="navbar__item">
-                    <a href="/projects.html" class="navbar__links transition-default">
+                    <div class="navbar__links transition-default" data-dialog="projects">
                         projects
-                    </a>
+                    </div>
                 </li>
                 <li class="navbar__item">
-                    <a href="/" class="navbar__links transition-default">
+                    <div class="navbar__links transition-default" data-dialog="timeline">
                         timeline
-                    </a>
+                    </div>
                 </li>
                 <li class="navbar__item">
-                    <a href="/" class="button transition-default">
+                    <div class="button transition-default" data-dialog="resume">
                         <span class="transition-default">resume</span>
-                    </a>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -50,10 +50,32 @@
             <div class="main__content">
                 <h1>hydrophase's repository</h1>
                 <p>abbreviated to HSRP (Hydro'S RePo). welcome to my personal website!</p>
-                <p>feel free to browse around for anything related to <i><a href="/"
-                            class="hidden-link transition-default">Hydrophase</a></i> </p>
-                <p>if you are unsure, go here: <i><a href="#" class="hidden-link transition-default">projects</a></i>
+                <p>feel free to browse around for anything related to 
+                    <span class="tooltip wrapper">
+                            <i><a class="hidden-link transition-default">
+                                Hydrophase
+                            </a>
+                            </i> 
+                    </span>
                 </p>
+                <p>if you are unsure, go to 
+                    <span class="tooltip wrapper">
+                        <i><a class="hidden-link transition-default">
+                            projects
+                        </a>
+                        </i>
+                    </span>
+
+                </p>
+            </div>
+        </div>
+        <div class="dialogue-overlay-hidden" id="dialogue-overlay">
+            <div class="dialogue-box">
+                <span class="dialogue-close">
+                    <div id="dialogue-content">
+
+                    </div>
+                </span>
             </div>
         </div>
     </div>
@@ -62,9 +84,9 @@
     <div class="footer">
         <div class="footer__container">
             <div class="footer__content">
-                <h1>foot!</h1>
-                <p>this is in development. source code can be found at <a href="https://github.com/tshadee/hsrp"
-                        class="hidden-link transition-default">https://github.com/tshadee/hsrp</a></p>
+                <h2>-fruity- chews</h2>
+                <p>this website is in development. source code can be found at <a href="https://github.com/tshadee/hsrp"
+                        class="hidden-link-hyper transition-default">https://github.com/tshadee/hsrp</a></p>
             </div>
         </div>
     </div>
