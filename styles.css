@@ -20,7 +20,7 @@
 }
 
 .transition-default {
-    transition: color 0.4s ease, background-color 0.4s ease, border-radius 0.4s ease, opacity 0.4s ease;
+    transition: color 0.4s ease, background-color 0.4s ease, border-radius 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
 }
 
 
@@ -36,7 +36,7 @@
 /* Navigation bar desktop mode */
 .navbar {
     background: #030303;
-    height: 80px;
+    height: 10vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -49,12 +49,12 @@
 .navbar__container {
     display: flex;
     justify-content: space-between;
-    height: 80px;
+    height: 10vh;
     z-index: 1;
     width: 100%;
     max-width: 2000px;
     margin: 0 auto;
-    padding: 0 40px;
+    padding: 0 5vh;
     animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
 }
 
@@ -70,7 +70,7 @@
     align-items: center;
     cursor: pointer;
     text-decoration: none;
-    font-size: 3rem;
+    font-size: 300%;
     font-weight: normal;
 }
 
@@ -82,7 +82,7 @@
 }
 
 .navbar__item {
-    height: 80px;
+    height: 10vh;
 }
 
 .navbar__links {
@@ -93,6 +93,7 @@
     text-decoration: none;
     padding: 0 1rem;
     height: 100%;
+    font-size: 130%;
 }
 
 .navbar__btn {
@@ -115,18 +116,25 @@
     outline: none;
     background-color: #333333;
     color: #fff;
+    font-size: 130%;
 }
 
 .button:hover {
-    background: #dddddd;
-    color:#030303;
+    background: #111111;
+    /* color:#030303; */
     transition: all 0.4s ease-in-out;
-    border-radius: 70px;
+}
+
+.button:hover span{
+    color: #8aadff;
+    transition: all 0.4s ease-in-out;
+    transform: scale(1.1);
 }
 
 .navbar__links:hover {
-    color: #8e8e8e;
-    transition: all 0.4s ease;
+    color: #8aadff;
+    transition: all 0.4s ease-in-out;
+    transform: scale(1.1);
 }
 
 @media screen and (max-width: 980px){
@@ -134,7 +142,7 @@
     .navbar__container{
         display: flex;
         justify-content: space-between;
-        height: 80px;
+        height: 10vh;
         z-index: 1;
         width: 100%;
         max-width: 1300px;
@@ -147,7 +155,7 @@
         margin: 0;
         width: 100%;
         position: absolute;
-        top: -1000px;
+        top: 10vh;
         opacity: 0;
         transition: all 0.5s ease-in-out;
         height: 30vh;
@@ -156,7 +164,7 @@
     }
 
     .navbar__menu.active{
-        top: 100%;
+        top: 10vh;
         opacity: 1;
         transition: all 0.5s ease;
         z-index: 99;
@@ -165,7 +173,7 @@
     }
 
     #navbar__logo{
-        padding-left: 40px;
+        padding-left: 5%;
     }
 
     .navbar__toggle .bar {
@@ -206,9 +214,14 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 60%;
+        width: 50%;
         height: 60px;
         margin: 0 auto;
+    }
+
+    .button:hover {
+        border-radius: 60px;
+        transition: all 0.4s ease;
     }
 
     .navbar__toggle .bar {
@@ -232,12 +245,12 @@
 /* Main Section */
 
 .main {
-    background-color: #1f1f1f;
+    background-color: #111111;
 }
 
 .main__container {
     height: 80vh;
-    background-color: #1f1f1f;
+    background-color: #111111;
     align-items: center;
     justify-self: center;
     margin: 0 auto;
@@ -245,30 +258,29 @@
     width: 100%;
     max-width: 2000px;
     display:flex;
-    padding: 0 40px;
-}
-
-.main__content  {
-    color: #f8f8f8;
+    padding: 0 10%;
 }
 
 .main__content h1 {
     font-weight: 450;
-    font-size:  70px;
+    font-size:  8vh;
     opacity:0;
     animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
     animation-delay: var(--anim-offset);
+    color: #fcfcfc;
 }
 
 .main__content p{
     opacity: 0;
     animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
     animation-delay: calc(var(--anim-offset)*2);
+    font-size: 2.5vh;
+    color:#dbdbdb;
 }
 
 .hidden-link {
     text-decoration: none;
-    color: #ff817f;
+    color: #8aadff;
     position: relative;
     opacity: 0;
     text-decoration: none;
@@ -281,4 +293,29 @@
 
 @media screen and (max-width: 980px) {
     /* main content stuff */
+}
+
+/* Footer Section */
+
+.footer {
+    background-color: #030303;
+}
+
+.footer__container {
+    height:10vh;
+    background-color: #030303;
+    width: 100%;
+    display: flex;
+    justify-self: center;
+    margin: 0 auto;
+    z-index: 1;
+    display: flex;
+    padding: 0 5%;
+    opacity: 0;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+    animation-delay: calc(var(--anim-offset)*3);
+}
+
+.footer__content {
+    color:#f8f8f8;
 }
