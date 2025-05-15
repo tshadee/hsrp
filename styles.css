@@ -297,7 +297,7 @@
 
 .main__content h1{
     font-weight: 450;
-    font-size: clamp(1.2rem, 8.33vw, 6rem);
+    font-size: clamp(1.2rem, 8.33vw, 5rem);
     width:100%;
     opacity: 0;
     animation: fadeSlideIn var(--a-duration) ease-in-out forwards;

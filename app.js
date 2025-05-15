@@ -7,23 +7,6 @@ menu.addEventListener('click', function() {
     menuLinks.classList.toggle('active');
 })
 
-// function scaleTitleToFit(){
-//     const title = document.getElementById('title-header');
-//     const wrapper = title.parentElement;
-//     title.style.transform = 'scale(1)';
-//     const wrapperWidth = wrapper.offsetWidth;
-//     const textWidth = title.scrollWidth;
-
-//     if(textWidth > wrapperWidth)
-//     {
-//         const scaleFactor = wrapperWidth/textWidth;
-//         title.style.transform = 'scale(${scaleFactor})';
-//     }
-// }
-
-// window.addEventListener('resize', scaleTitleToFit);
-// window.addEventListener('DOMContentLoaded', scaleTitleToFit);
-
 // hiddenLink.addEventListener('mouseover', function() {
 //     hiddenLink.classList.add(visible);
 // })
