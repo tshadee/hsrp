@@ -5,6 +5,35 @@
     font-family: 'CMU Serif',sans-serif;
 }
 
+/* Global Animations */
+
+@keyframes fadeSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.transition-default {
+    transition: color 0.4s ease, background-color 0.4s ease, border-radius 0.4s ease, opacity 0.4s ease;
+}
+
+
+/* 'Global' variables  */
+:root {
+    --main--black-color: #030303;
+    --heading-font-size: 70px;
+    --a-duration: 0.7s;
+    --y-slide-dist: -20px;
+    --anim-offset: 0.45s;
+}
+
+/* Navigation bar desktop mode */
 .navbar {
     background: #030303;
     height: 80px;
@@ -23,14 +52,15 @@
     height: 80px;
     z-index: 1;
     width: 100%;
-    max-width: 1300px;
+    max-width: 2000px;
     margin: 0 auto;
-    padding: 0 50px;
+    padding: 0 40px;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
 }
 
 #navbar__logo {
     background-color: #FFFFFF;
-    background-image: linear-gradient(to top, #999999 0%, #f1f1f1 100%);
+    background-image: linear-gradient(to top, #b2b2b2 0%, #f8f8f8 100%);
     background-size: 100%;
     -webkit-background-clip: text;
     -moz-background-clip: text;
@@ -63,7 +93,6 @@
     text-decoration: none;
     padding: 0 1rem;
     height: 100%;
-    /* font-family: 'Palatino Linotype', sans-serif; */
 }
 
 .navbar__btn {
@@ -84,27 +113,24 @@
     width: 100%;
     border: none;
     outline: none;
-    /* border-radius: 60px; */
     background-color: #333333;
     color: #fff;
 }
 
 .button:hover {
     background: #dddddd;
-    transition: all 0.4s ease-in-out;
-}
-
-.button:hover{
     color:#030303;
     transition: all 0.4s ease-in-out;
+    border-radius: 70px;
 }
 
 .navbar__links:hover {
     color: #8e8e8e;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 }
 
 @media screen and (max-width: 980px){
+    /* navbar mobile */
     .navbar__container{
         display: flex;
         justify-content: space-between;
@@ -123,8 +149,8 @@
         position: absolute;
         top: -1000px;
         opacity: 0;
-        transition: all 0.5s ease;
-        height: 40vh;
+        transition: all 0.5s ease-in-out;
+        height: 30vh;
         z-index: -1;
         background: #030303;
     }
@@ -134,12 +160,12 @@
         opacity: 1;
         transition: all 0.5s ease;
         z-index: 99;
-        height: 40vh;
+        height: 30vh;
         font-size: 1.5rem;
     }
 
     #navbar__logo{
-        padding-left: 25px;
+        padding-left: 40px;
     }
 
     .navbar__toggle .bar {
@@ -152,12 +178,14 @@
 
     .navbar__item{
         width: 100%;
+        height: 80%;
     }
 
     .navbar__links{
         text-align: center;
-        padding: 2rem;
+        padding: 1rem;
         width: 100%;
+        height: 80%;
         display: table;
     }
 
@@ -171,14 +199,15 @@
     .navbar__btn{
         padding-bottom: 2rem;
         justify-content: center;
+        height: 80%;
     }
 
     .button{
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 80%;
-        height: 80px;
+        width: 60%;
+        height: 60px;
         margin: 0 auto;
     }
 
@@ -198,4 +227,58 @@
     #mobile-menu.is-active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
     }
+}
+
+/* Main Section */
+
+.main {
+    background-color: #1f1f1f;
+}
+
+.main__container {
+    height: 80vh;
+    background-color: #1f1f1f;
+    align-items: center;
+    justify-self: center;
+    margin: 0 auto;
+    z-index: 1;
+    width: 100%;
+    max-width: 2000px;
+    display:flex;
+    padding: 0 40px;
+}
+
+.main__content  {
+    color: #f8f8f8;
+}
+
+.main__content h1 {
+    font-weight: 450;
+    font-size:  70px;
+    opacity:0;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+    animation-delay: var(--anim-offset);
+}
+
+.main__content p{
+    opacity: 0;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+    animation-delay: calc(var(--anim-offset)*2);
+}
+
+.hidden-link {
+    text-decoration: none;
+    color: #ff817f;
+    position: relative;
+    opacity: 0;
+    text-decoration: none;
+}
+
+.hidden-link:hover {
+    opacity: 1;
+    transition: all 0.4s ease;
+}
+
+@media screen and (max-width: 980px) {
+    /* main content stuff */
 }
