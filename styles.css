@@ -50,7 +50,12 @@
     --a-duration: 0.55s;
     --y-slide-dist: -20px;
     --anim-offset: 0.25s;
-    --content-background: linear-gradient(to top, #030303 0%, #171935 100%);
+    --content-background: linear-gradient(to top, #030303 0%, #171935 100%),
+        repeating-linear-gradient(45deg,
+            rgba(255, 255, 255, 0.01) 0px,
+            rgba(255, 255, 255, 0.01) 1px,
+            transparent 1px,
+            transparent 2px);
 }
 
 /* Navigation bar desktop mode */
@@ -285,9 +290,9 @@
             rgba(255, 255, 255, 0.01) 1px,
             transparent 1px,
             transparent 2px);
-        background-blend-mode: overlay;
+    background-blend-mode: overlay;
     margin: 0 auto;
-    z-index: 1;
+    z-index: 3;
     width: clamp(300px,100%,100%);
     padding: 0 5%;
     align-items: center;
@@ -305,22 +310,6 @@
     animation-delay: var(--anim-offset);
     color: #fcfcfc;
 }
-
-/* .main__content-titlewrap{
-    width: 100%;
-    overflow:hidden;
-    color: #fcfcfc;
-    opacity: 0;
-    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
-    animation-delay: var(--anim-offset);
-    font-size: 2.5rem;
-}
-
-#title-header {
-    display:inline-block;
-    white-space: nowrap;
-    transform-origin: left center;
-} */
 
 .main__content p {
     opacity: 0;
