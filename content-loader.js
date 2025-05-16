@@ -194,7 +194,7 @@ const ContentLoader = {
           .catch(error => {
             console.error('Error loading content:', error);
             // Optional: Show error message in main container
-            mainContainer.innerHTML = `<div class="main__content"><h1>Content Not Found</h1><p>Sorry, the requested content could not be loaded.</p></div>`;
+            mainContainer.innerHTML = `<div class="main__content"><h1>Content Missing</h1><p>If you know how to contact me - do so. This is unacceptable !!!</p><p>Reload the page as well...every link is now broken... (click hsrp.cc at the bottom for a hard reload)</div>`;
           });
       }
     },
