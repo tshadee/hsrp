@@ -37,6 +37,109 @@ const ContentLoader = {
       
       // Push initial state
       history.replaceState({ content: 'home' }, 'Home', window.location.pathname);
+      
+      // Add the standardized animation CSS to the document
+      this.addStandardAnimations();
+    },
+    
+    // Add standardized animations that will apply to all content
+    addStandardAnimations: function() {
+      const standardAnimationsId = 'content-standard-animations';
+      
+      // Don't add it twice
+      if (document.getElementById(standardAnimationsId)) {
+        return;
+      }
+      
+      const standardCSS = `
+        /* Standard content animations */
+        .content-animated h1 {
+          opacity: 0;
+          animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+          animation-delay: var(--anim-offset);
+        }
+        
+        .content-animated p {
+          opacity: 0;
+          animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+        }
+        
+        .content-animated p:nth-of-type(1) {
+          animation-delay: calc(var(--anim-offset) * 2);
+        }
+        
+        .content-animated p:nth-of-type(2) {
+          animation-delay: calc(var(--anim-offset) * 2.5);
+        }
+        
+        .content-animated p:nth-of-type(3) {
+          animation-delay: calc(var(--anim-offset) * 3);
+        }
+        
+        .content-animated p:nth-of-type(4) {
+          animation-delay: calc(var(--anim-offset) * 3.5);
+        }
+        
+        .content-animated p:nth-of-type(5) {
+          animation-delay: calc(var(--anim-offset) * 4);
+        }
+        
+        .content-animated div:not(.main__content) {
+          opacity: 0;
+          animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+        }
+        
+        .content-animated div:nth-of-type(1) {
+          animation-delay: calc(var(--anim-offset) * 4.5);
+        }
+        
+        .content-animated div:nth-of-type(2) {
+          animation-delay: calc(var(--anim-offset) * 5);
+        }
+        
+        .content-animated div:nth-of-type(3) {
+          animation-delay: calc(var(--anim-offset) * 5.5);
+        }
+        
+        /* Content transition animations */
+        @keyframes contentFadeOutDown {
+          0% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+        }
+        
+        @keyframes contentFadeInUp {
+          0% {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .content-fade-out {
+          animation: contentFadeOutDown 0.4s ease-in-out forwards;
+        }
+        
+        .content-fade-in {
+          animation: contentFadeInUp 0.4s ease-in-out forwards;
+        }
+      `;
+      
+      // Create a new style element
+      const styleElement = document.createElement('style');
+      styleElement.id = standardAnimationsId;
+      styleElement.textContent = standardCSS;
+      
+      // Add it to the document head
+      document.head.appendChild(styleElement);
     },
     
     // Set up navigation click handlers
@@ -91,7 +194,7 @@ const ContentLoader = {
           .catch(error => {
             console.error('Error loading content:', error);
             // Optional: Show error message in main container
-            mainContainer.innerHTML = `<div class="main__content"><h1>Content Missing</h1><p>If you know how to contact me - do so. This is unacceptable !!!</p><p>Reload the page as well...every link is now broken... (click hsrp.cc at the bottom for a hard reload)</div>`;
+            mainContainer.innerHTML = `<div class="main__content"><h1>Content Not Found</h1><p>Sorry, the requested content could not be loaded.</p></div>`;
           });
       }
     },
@@ -180,10 +283,10 @@ const ContentLoader = {
     
     // Handle the content transition with animation
     transitionContent: function(container, newContent, contentId, updateHistory) {
-      // Fade out current content
-      container.style.opacity = '0';
+      // Add class for fade out animation (slide down while fading out)
+      container.classList.add('content-fade-out');
       
-      // After fade out, update content and fade back in
+      // After fade out completes, update content and fade back in
       setTimeout(() => {
         // If we're changing content, handle CSS management
         if (this.currentContent !== contentId) {
@@ -193,7 +296,26 @@ const ContentLoader = {
           }
         }
         
+        // Update the content
         container.innerHTML = newContent;
+        
+        // Get the main content div
+        const mainContent = container.querySelector('.main__content');
+        
+        // Add class for standardized animations
+        if (mainContent) {
+          mainContent.classList.add('content-animated');
+        }
+        
+        // Remove the fade out class and add fade in
+        container.classList.remove('content-fade-out');
+        container.classList.add('content-fade-in');
+        
+        // Remove the fade in class after animation completes
+        setTimeout(() => {
+          container.classList.remove('content-fade-in');
+        }, this.transitionDuration);
+        
         this.currentContent = contentId;
         
         // Update browser history if needed
@@ -203,10 +325,7 @@ const ContentLoader = {
         
         // Reinitialize any event listeners on the new content
         this.setupHiddenLinks();
-        
-        // Fade in new content
-        container.style.opacity = '1';
-      }, this.transitionDuration / 2);
+      }, 400); // Match this to the contentFadeOutDown animation duration
     }
   };
   
