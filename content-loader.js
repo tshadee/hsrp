@@ -206,7 +206,56 @@ const ContentLoader = {
       .content-fade-in {
         animation: contentFadeInUp 0.3s ease-in-out forwards;
       }
+
+      /* Content Animations */
+      .content-animated h1 {
+        opacity: 0;
+        animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+        animation-delay: var(--anim-offset);
+      }
       
+      .content-animated p {
+        opacity: 0;
+        animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+      }
+      
+      .content-animated p:nth-of-type(1) {
+        animation-delay: calc(var(--anim-offset) * 2);
+      }
+      
+      .content-animated p:nth-of-type(2) {
+        animation-delay: calc(var(--anim-offset) * 2.5);
+      }
+      
+      .content-animated p:nth-of-type(3) {
+        animation-delay: calc(var(--anim-offset) * 3);
+      }
+      
+      .content-animated p:nth-of-type(4) {
+        animation-delay: calc(var(--anim-offset) * 3.5);
+      }
+      
+      .content-animated p:nth-of-type(5) {
+        animation-delay: calc(var(--anim-offset) * 4);
+      }
+      
+      .content-animated div:not(.main__content) {
+        opacity: 0;
+        animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+      }
+      
+      .content-animated div:nth-of-type(1) {
+        animation-delay: calc(var(--anim-offset) * 4.5);
+      }
+      
+      .content-animated div:nth-of-type(2) {
+        animation-delay: calc(var(--anim-offset) * 5);
+      }
+      
+      .content-animated div:nth-of-type(3) {
+        animation-delay: calc(var(--anim-offset) * 5.5);
+      }
+
       /* Background transition */
       .main__background {
         transition: background 0.6s ease-in-out;
