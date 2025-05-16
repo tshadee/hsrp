@@ -342,7 +342,7 @@ const ContentLoader = {
         .catch(error => {
           console.error('Error loading content:', error);
           // Optional: Show error message in main container
-          this.contentWrapper.innerHTML = `<div class="main__content"><h1>Content Missing</h1><p>If you know how to contact me - do so. This is unacceptable !!!</p><p>Reload the page as well...every link is now broken... (click hsrp.cc at the bottom for a hard reload)</div>`;
+          this.contentWrapper.innerHTML = `<div class="main__content"><h1>content missing</h1><p>if you know how to contact me - do so. this is unacceptable !</p><p>once you've done that, use the navigation bar above</div>`;
         });
     }
   },
