@@ -1,0 +1,7 @@
+:root {
+    --content-background: linear-gradient(to top, #030303 0%, #352817 100%);
+}
+
+.project__content {
+    color:#fcfcfc;
+}

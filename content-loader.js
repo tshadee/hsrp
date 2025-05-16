@@ -11,9 +11,15 @@ const ContentLoader = {
     
     // Current active content
     currentContent: 'home',
+
+    // Default background gradient (can be overridden by content CSS)
+    defaultBackground: 'linear-gradient(to top, #030303 0%,#171935 100%)',
+    
+    // Current background gradient
+    currentBackground: 'linear-gradient(to top, #030303 0%,#171935 100%)',
     
     // Transition duration in milliseconds (matching your CSS animation duration)
-    transitionDuration: 600,
+    transitionDuration: 300,
     
     // Initialize the content loader
     init: function() {
@@ -40,6 +46,46 @@ const ContentLoader = {
       
       // Add the standardized animation CSS to the document
       this.addStandardAnimations();
+    },
+
+    // Create a separate background element that stays persistent
+    createBackgroundElement: function() {
+      // Check if it already exists
+      let bgElement = document.getElementById('content-background');
+      
+      if (!bgElement) {
+        // Create the background element
+        bgElement = document.createElement('div');
+        bgElement.id = 'content-background';
+        
+        // Style it to cover the whole viewport
+        bgElement.style.position = 'fixed';
+        bgElement.style.top = '0';
+        bgElement.style.left = '0';
+        bgElement.style.width = '100%';
+        bgElement.style.height = '100%';
+        bgElement.style.zIndex = '-1';
+        bgElement.style.transition = 'background 0.6s ease-in-out';
+        bgElement.style.background = this.defaultBackground;
+        
+        // Insert it as the first child of body
+        document.body.insertBefore(bgElement, document.body.firstChild);
+      }
+      
+      // Store a reference
+      this.backgroundElement = bgElement;
+    },
+    
+    // Method to change the background gradient
+    changeBackground: function(newBackground) {
+      if (!newBackground) {
+        newBackground = this.defaultBackground;
+      }
+      
+      if (this.backgroundElement && newBackground !== this.currentBackground) {
+        this.backgroundElement.style.background = newBackground;
+        this.currentBackground = newBackground;
+      }
     },
     
     // Add standardized animations that will apply to all content
@@ -169,6 +215,19 @@ const ContentLoader = {
         });
       });
     },
+
+    // Extract background from CSS content
+    extractBackgroundGradient: function(cssText) {
+      // Look for background gradient definitions
+      const gradientRegex = /\s*--content-background\s*:\s*([^;]+);/;
+      const match = cssText.match(gradientRegex);
+      
+      if (match && match[1]) {
+        return match[1].trim();
+      }
+      
+      return null;
+    },
     
     // Load content by ID
     loadContent: function(contentId, updateHistory = true) {
@@ -230,6 +289,12 @@ const ContentLoader = {
         })
         .then(cssText => {
           if (cssText) {
+            // Extract background gradient if defined
+            const backgroundGradient = this.extractBackgroundGradient(cssText);
+            if (backgroundGradient) {
+              // Apply the background gradient
+              this.changeBackground(backgroundGradient);
+            }
             // Cache the CSS
             this.cssCache[contentId] = cssText;
             // Apply the CSS
@@ -279,7 +344,7 @@ const ContentLoader = {
     
     // Handle the content transition with animation
     transitionContent: function(container, newContent, contentId, updateHistory) {
-      // Add class for fade out animation (slide down while fading out)
+      // Add class for fade out animation (content only fades out, not background)
       container.classList.add('content-fade-out');
       
       // After fade out completes, update content and fade back in
@@ -289,6 +354,22 @@ const ContentLoader = {
           // Remove the old content's CSS if it exists
           if (this.currentContent !== 'home') {
             this.removeContentCSS(this.currentContent);
+          }
+          
+          // If we have CSS for the new content
+          if (this.cssCache[contentId]) {
+            // Extract background gradient if defined
+            const backgroundGradient = this.extractBackgroundGradient(this.cssCache[contentId]);
+            if (backgroundGradient) {
+              // Apply the background gradient
+              this.changeBackground(backgroundGradient);
+            } else {
+              // Reset to default if no gradient specified
+              this.changeBackground(this.defaultBackground);
+            }
+          } else {
+            // Reset to default if no CSS
+            this.changeBackground(this.defaultBackground);
           }
         }
         

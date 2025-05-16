@@ -50,6 +50,7 @@
     --a-duration: 0.55s;
     --y-slide-dist: -20px;
     --anim-offset: 0.25s;
+    --content-background: linear-gradient(to top, #030303 0%, #171935 100%);
 }
 
 /* Navigation bar desktop mode */
