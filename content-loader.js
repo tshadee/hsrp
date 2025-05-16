@@ -12,14 +12,9 @@ const ContentLoader = {
   // Current active content
   currentContent: 'home',
   
-  // Default background gradient (from styles.css)
   defaultBackground: 'linear-gradient(to top, #030303 0%, #171935 100%)',
-  
-  // Current background gradient
   currentBackground: 'linear-gradient(to top, #030303 0%, #171935 100%)',
-  
-  // Transition duration in milliseconds (matching your CSS animation duration)
-  transitionDuration: 450,
+  transitionDuration: 450,  // in ms
   
   // Initialize the content loader
   init: function() {
@@ -31,13 +26,9 @@ const ContentLoader = {
     this.defaultBackground = rootStyles.getPropertyValue('--content-background').trim() || this.defaultBackground;
     this.currentBackground = this.defaultBackground;
     
-    // Modify main container to separate content from background
-    this.setupMainContainer();
-    
-    // Set up click handlers for navigation items
+    this.setupMainContainer();     // Modify main container to separate content from background
+    this.createBackgroundElements();
     this.setupNavigation();
-    
-    // Set up click handlers for hidden links
     this.setupHiddenLinks();
     
     // Add a history state handler
@@ -56,20 +47,11 @@ const ContentLoader = {
     this.addStandardAnimations();
   },
   
-  // Setup the main container to handle background transitions
   setupMainContainer: function() {
     const mainContainer = document.querySelector('.main__container');
     
-    // Create a background element that will handle transitions
-    const backgroundElement = document.createElement('div');
-    backgroundElement.className = 'main__background';
-    backgroundElement.style.position = 'absolute';
-    backgroundElement.style.top = '0';
-    backgroundElement.style.left = '0';
-    backgroundElement.style.width = '100%';
-    backgroundElement.style.height = '100%';
-    backgroundElement.style.zIndex = '0'; // Behind content
-    backgroundElement.style.background = this.currentBackground;
+    // Make the main container position relative to contain absolute elements
+    mainContainer.style.position = 'relative';
     
     // Create a wrapper for the content
     const contentWrapper = document.createElement('div');
@@ -79,12 +61,8 @@ const ContentLoader = {
     const content = mainContainer.innerHTML;
     contentWrapper.innerHTML = content;
     
-    // Make the main container position relative to contain absolute elements
-    mainContainer.style.position = 'relative';
-    
     // Clear and update the main container
     mainContainer.innerHTML = '';
-    mainContainer.appendChild(backgroundElement);
     mainContainer.appendChild(contentWrapper);
     
     // Apply some basic styling to maintain layout
@@ -93,26 +71,84 @@ const ContentLoader = {
     contentWrapper.style.height = '100%';
     contentWrapper.style.display = 'flex';
     contentWrapper.style.alignItems = 'center';
-    contentWrapper.style.zIndex = '1'; // Above background, but keeps hidden links accessible
+    contentWrapper.style.zIndex = '1'; // Above background
     
     // Store references
     this.mainContainer = mainContainer;
     this.contentWrapper = contentWrapper;
-    this.backgroundElement = backgroundElement;
   },
-  
-  // Method to change the background gradient
-  changeBackground: function(newBackground) {
-    if (!newBackground) {
-      newBackground = this.defaultBackground;
+
+  createBackgroundElements: function() {
+    // Get all potential content IDs from your navigation
+    const contentIds = ['home'];
+    document.querySelectorAll('[data-dialog]').forEach(link => {
+      contentIds.push(link.getAttribute('data-dialog'));
+    });
+    
+    // Create a background container
+    const backgroundContainer = document.createElement('div');
+    backgroundContainer.className = 'background-container';
+    backgroundContainer.style.position = 'absolute';
+    backgroundContainer.style.top = '0';
+    backgroundContainer.style.left = '0';
+    backgroundContainer.style.width = '100%';
+    backgroundContainer.style.height = '100%';
+    backgroundContainer.style.zIndex = '0';
+    
+    // Create and store background elements for each content ID
+    this.backgroundElements = {};
+    
+    // Add home background first (will be visible by default)
+    const homeBackground = document.createElement('div');
+    homeBackground.className = 'background background--home background--active';
+    homeBackground.style.position = 'absolute';
+    homeBackground.style.top = '0';
+    homeBackground.style.left = '0';
+    homeBackground.style.width = '100%';
+    homeBackground.style.height = '100%';
+    homeBackground.style.background = this.defaultBackground;
+    homeBackground.style.opacity = '1';
+    homeBackground.style.transition = 'opacity 0.6s ease';
+    
+    backgroundContainer.appendChild(homeBackground);
+    this.backgroundElements['home'] = homeBackground;
+    
+    // Add other backgrounds (initially invisible)
+    for (const id of contentIds) {
+      if (id === 'home') continue; // Skip home as we already added it
+      
+      const background = document.createElement('div');
+      background.className = `background background--${id}`;
+      background.style.position = 'absolute';
+      background.style.top = '0';
+      background.style.left = '0';
+      background.style.width = '100%';
+      background.style.height = '100%';
+      background.style.opacity = '0';
+      background.style.transition = 'opacity 0.6s ease';
+      
+      backgroundContainer.appendChild(background);
+      this.backgroundElements[id] = background;
     }
     
-    if (newBackground !== this.currentBackground || this.backgroundElement.style.background !== newBackground) {
-      // Apply the new background to the dedicated background element
-      this.backgroundElement.style.background = newBackground;
-      
-      // Update the current background
-      this.currentBackground = newBackground;
+    this.mainContainer.appendChild(backgroundContainer);
+    this.backgroundContainer = backgroundContainer;
+  },
+
+  // Method to show the background for a specific content ID
+  showBackground: function(contentId) {
+    // Hide all backgrounds
+    for (const id in this.backgroundElements) {
+      const background = this.backgroundElements[id];
+      background.style.opacity = '0';
+      background.classList.remove('background--active');
+    }
+    
+    // Show the requested background
+    const background = this.backgroundElements[contentId];
+    if (background) {
+      background.style.opacity = '1';
+      background.classList.add('background--active');
     }
   },
   
@@ -277,61 +313,63 @@ const ContentLoader = {
       });
   },
   
-  // Load content-specific CSS file
   loadContentCSS: function(contentId) {
-    // Special handling for home content
+    // For home content, just show the home background
     if (contentId === 'home') {
-      // Reset to default background with transition
-      this.changeBackground(this.defaultBackground);
+      this.showBackground('home');
       return Promise.resolve();
     }
     
-    // Check if we already have this CSS in cache
+    // Check if we have CSS for this content
     if (this.cssCache[contentId]) {
-      // Extract and apply the background gradient if defined
+      // Extract background gradient if defined
       const backgroundGradient = this.extractBackgroundGradient(this.cssCache[contentId]);
       if (backgroundGradient) {
-        // Apply the background gradient
-        this.changeBackground(backgroundGradient);
+        // Apply the background gradient to the corresponding element
+        this.backgroundElements[contentId].style.background = backgroundGradient;
+      } else {
+        // If no background defined, use default
+        this.backgroundElements[contentId].style.background = this.defaultBackground;
       }
       
+      // Show this background
+      this.showBackground(contentId);
       this.applyContentCSS(contentId, this.cssCache[contentId]);
       return Promise.resolve();
     }
     
-    // Try to fetch the CSS file
+    // Try to fetch CSS
     return fetch(`content/${contentId}.css`)
       .then(response => {
-        if (!response.ok) {
-          // If CSS doesn't exist, just ignore - it's optional
-          return null;
-        }
+        if (!response.ok) return null;
         return response.text();
       })
       .then(cssText => {
         if (cssText) {
-          // Extract background gradient if defined
-          const backgroundGradient = this.extractBackgroundGradient(cssText);
-          if (backgroundGradient) {
-            // Apply the background gradient
-            this.changeBackground(backgroundGradient);
-          }
-          
           // Cache the CSS
           this.cssCache[contentId] = cssText;
-          // Apply the CSS
+          
+          // Extract and apply background gradient
+          const backgroundGradient = this.extractBackgroundGradient(cssText);
+          if (backgroundGradient) {
+            this.backgroundElements[contentId].style.background = backgroundGradient;
+          } else {
+            this.backgroundElements[contentId].style.background = this.defaultBackground;
+          }
+          
+          // Apply the CSS and show background
           this.applyContentCSS(contentId, cssText);
-        } else if (contentId !== 'home') {
-          // If there's no CSS and not home, reset to default background
-          this.changeBackground(this.defaultBackground);
+          this.showBackground(contentId);
+        } else {
+          // If no CSS, just use default background
+          this.backgroundElements[contentId].style.background = this.defaultBackground;
+          this.showBackground(contentId);
         }
       })
-      .catch(error => {
-        console.log('No CSS file for this content (this is okay):', error);
-        // If CSS fails to load and not home, reset to default background
-        if (contentId !== 'home') {
-          this.changeBackground(this.defaultBackground);
-        }
+      .catch(() => {
+        // On error, use default background
+        this.backgroundElements[contentId].style.background = this.defaultBackground;
+        this.showBackground(contentId);
       });
   },
   
@@ -371,32 +409,25 @@ const ContentLoader = {
     }
   },
   
-  // Handle the content transition with animation
   transitionContent: function(newContent, contentId, updateHistory) {
-    // Add class for fade out animation to content wrapper only (not the background)
+    // Add class for fade out animation to content wrapper
     this.contentWrapper.classList.add('content-fade-out');
     
-    // Handle background transition first - to ensure it transitions smoothly
+    // Begin background transition right away
     if (contentId === 'home') {
-      // Always reset to default background when going home
-      this.changeBackground(this.defaultBackground);
+      this.showBackground('home');
     } else if (this.cssCache[contentId]) {
-      // Extract background gradient if defined
-      const backgroundGradient = this.extractBackgroundGradient(this.cssCache[contentId]);
-      if (backgroundGradient) {
-        // Apply the background gradient
-        this.changeBackground(backgroundGradient);
-      } else {
-        // If no background defined in CSS, use default
-        this.changeBackground(this.defaultBackground);
-      }
+      // Background properties should already be set on the element
+      this.showBackground(contentId);
     } else {
-      // Try to load CSS for background info
+      // Try to load CSS to set up background
       this.loadContentCSS(contentId);
     }
     
     // After fade out completes, update content and fade back in
     setTimeout(() => {
+      // Rest of your content transition code...
+      
       // If we're changing content, handle CSS management
       if (this.currentContent !== contentId) {
         // Remove the old content's CSS if it exists and isn't home

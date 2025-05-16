@@ -145,14 +145,14 @@
     width: 100%;
     border: none;
     outline: none;
-    background-color: #111111;
+    /* background-color: #111111; */
     color: #fff;
     font-size: 2.5vh;
     cursor: pointer;
 }
 
 .button:hover {
-    background: #171935;
+    /* background: #2b2b2b; */
     transition: all 0.4s ease-in-out;
 }
 
@@ -279,7 +279,7 @@
 
 .main {
     background-color: #030303;
-    z-index:99;
+    z-index:3;
 }
 
 .main__container {
