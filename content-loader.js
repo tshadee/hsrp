@@ -86,7 +86,7 @@ const ContentLoader = {
         
         .content-animated div:not(.main__content) {
           opacity: 0;
-          animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+          animation: fadeInOnly var(--a-duration) ease-in-out forwards;
         }
         
         .content-animated div:nth-of-type(1) {
@@ -105,31 +105,27 @@ const ContentLoader = {
         @keyframes contentFadeOutDown {
           0% {
             opacity: 1;
-            transform: translateY(0);
           }
           100% {
             opacity: 0;
-            transform: translateY(30px);
           }
         }
         
         @keyframes contentFadeInUp {
           0% {
             opacity: 0;
-            transform: translateY(30px);
           }
           100% {
             opacity: 1;
-            transform: translateY(0);
           }
         }
         
         .content-fade-out {
-          animation: contentFadeOutDown 0.4s ease-in-out forwards;
+          animation: contentFadeOutDown 0.2s ease-in-out forwards;
         }
         
         .content-fade-in {
-          animation: contentFadeInUp 0.4s ease-in-out forwards;
+          animation: contentFadeInUp 0.2s ease-in-out forwards;
         }
       `;
       
@@ -309,7 +305,7 @@ const ContentLoader = {
         
         // Remove the fade out class and add fade in
         container.classList.remove('content-fade-out');
-        container.classList.add('content-fade-in');
+        // container.classList.add('content-fade-in');
         
         // Remove the fade in class after animation completes
         setTimeout(() => {

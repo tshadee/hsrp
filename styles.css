@@ -47,7 +47,7 @@
 :root {
     --main--black-color: #030303;
     --heading-font-size: 70px;
-    --a-duration: 0.6s;
+    --a-duration: 0.55s;
     --y-slide-dist: -20px;
     --anim-offset: 0.25s;
 }
@@ -348,7 +348,7 @@
     color: #8aadff;
     transform: scale(1.03);
     transition: all 0.4s ease-in-out;
-    border-bottom: 2px dashed rgba(138, 173, 255, 0.1);
+    border-bottom: 2px dashed rgba(138, 173, 255, 0);
 }
 
 .hidden-link-hyper {
@@ -366,7 +366,7 @@
     color: #8aadff;
     transform: scale(1.03);
     transition: all 0.4s ease-in-out;
-    border-bottom: 2px dashed rgba(138, 173, 255, 0.1);
+    border-bottom: 2px dashed rgba(138, 173, 255, 0);
 }
 
 
