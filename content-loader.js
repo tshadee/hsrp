@@ -312,8 +312,8 @@ const ContentLoader = {
       clone.addEventListener('click', (e) => {
         e.preventDefault();
         // Get the text content of the link to use as the content ID
-        const contentId = clone.getAttribute('data-dialog');
-        // const contentId = clone.textContent.trim().toLowerCase();
+        // const contentId = clone.getAttribute('data-dialog');
+        const contentId = clone.textContent.trim().toLowerCase();
         this.loadContent(contentId, true);
       });
     });
