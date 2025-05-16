@@ -30,7 +30,7 @@ const ContentLoader = {
     const rootStyles = getComputedStyle(document.documentElement);
     this.defaultBackground = rootStyles.getPropertyValue('--content-background').trim() || this.defaultBackground;
     this.currentBackground = this.defaultBackground;
-
+    
     // Modify main container to separate content from background
     this.setupMainContainer();
     
@@ -60,6 +60,17 @@ const ContentLoader = {
   setupMainContainer: function() {
     const mainContainer = document.querySelector('.main__container');
     
+    // Create a background element that will handle transitions
+    const backgroundElement = document.createElement('div');
+    backgroundElement.className = 'main__background';
+    backgroundElement.style.position = 'absolute';
+    backgroundElement.style.top = '0';
+    backgroundElement.style.left = '0';
+    backgroundElement.style.width = '100%';
+    backgroundElement.style.height = '100%';
+    backgroundElement.style.zIndex = '0'; // Behind content
+    backgroundElement.style.background = this.currentBackground;
+    
     // Create a wrapper for the content
     const contentWrapper = document.createElement('div');
     contentWrapper.className = 'main__content-wrapper';
@@ -68,20 +79,26 @@ const ContentLoader = {
     const content = mainContainer.innerHTML;
     contentWrapper.innerHTML = content;
     
+    // Make the main container position relative to contain absolute elements
+    mainContainer.style.position = 'relative';
+    
     // Clear and update the main container
     mainContainer.innerHTML = '';
+    mainContainer.appendChild(backgroundElement);
     mainContainer.appendChild(contentWrapper);
     
     // Apply some basic styling to maintain layout
+    contentWrapper.style.position = 'relative';
     contentWrapper.style.width = '100%';
     contentWrapper.style.height = '100%';
     contentWrapper.style.display = 'flex';
     contentWrapper.style.alignItems = 'center';
-    contentWrapper.style.zIndex = '0';
+    contentWrapper.style.zIndex = '1'; // Above background, but keeps hidden links accessible
     
     // Store references
     this.mainContainer = mainContainer;
     this.contentWrapper = contentWrapper;
+    this.backgroundElement = backgroundElement;
   },
   
   // Method to change the background gradient
@@ -90,9 +107,9 @@ const ContentLoader = {
       newBackground = this.defaultBackground;
     }
     
-    if (newBackground !== this.currentBackground) {
-      // Apply the new background to the main container with transition
-      this.mainContainer.style.background = newBackground;
+    if (newBackground !== this.currentBackground || this.backgroundElement.style.background !== newBackground) {
+      // Apply the new background to the dedicated background element
+      this.backgroundElement.style.background = newBackground;
       
       // Update the current background
       this.currentBackground = newBackground;
@@ -139,6 +156,11 @@ const ContentLoader = {
         height: 100%;
         display: flex;
         align-items: center;
+        pointer-events: none; /* Allow clicks to pass through */
+      }
+      
+      .main__content-wrapper * {
+        pointer-events: auto; /* Re-enable clicks for children */
       }
       
       .content-fade-out {
@@ -150,7 +172,7 @@ const ContentLoader = {
       }
       
       /* Background transition */
-      .main__container {
+      .main__background {
         transition: background 0.6s ease-in-out;
       }
     `;
@@ -185,17 +207,23 @@ const ContentLoader = {
     }
   },
   
-  // Set up hidden links click handlers
+  // Setup hidden links click handlers
   setupHiddenLinks: function() {
-    const hiddenLinks = document.querySelectorAll('.hidden-link');
-    hiddenLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        // Get the text content of the link to use as the content ID
-        const contentId = link.textContent.trim().toLowerCase();
-        this.loadContent(contentId, true);
+    setTimeout(() => {
+      const hiddenLinks = document.querySelectorAll('.hidden-link');
+      hiddenLinks.forEach(link => {
+        // Remove any existing click handlers to prevent duplicates
+        const clone = link.cloneNode(true);
+        link.parentNode.replaceChild(clone, link);
+        
+        clone.addEventListener('click', (e) => {
+          e.preventDefault();
+          // Get the text content of the link to use as the content ID
+          const contentId = clone.textContent.trim().toLowerCase();
+          this.loadContent(contentId, true);
+        });
       });
-    });
+    }, 50); // Small delay to ensure DOM is ready
   },
   
   // Extract background from CSS content
@@ -245,20 +273,19 @@ const ContentLoader = {
       })
       .then(content => {
         // Also try to load matching CSS file
-        this.loadContentCSS(contentId);
-        return content;
+        return this.loadContentCSS(contentId).then(() => content);
       });
   },
   
   // Load content-specific CSS file
   loadContentCSS: function(contentId) {
-
+    // Special handling for home content
     if (contentId === 'home') {
       // Reset to default background with transition
       this.changeBackground(this.defaultBackground);
       return Promise.resolve();
     }
-
+    
     // Check if we already have this CSS in cache
     if (this.cssCache[contentId]) {
       // Extract and apply the background gradient if defined
@@ -372,7 +399,7 @@ const ContentLoader = {
     setTimeout(() => {
       // If we're changing content, handle CSS management
       if (this.currentContent !== contentId) {
-        // Remove the old content's CSS if it exists
+        // Remove the old content's CSS if it exists and isn't home
         if (this.currentContent !== 'home') {
           this.removeContentCSS(this.currentContent);
         }
@@ -393,21 +420,22 @@ const ContentLoader = {
       this.contentWrapper.classList.remove('content-fade-out');
       this.contentWrapper.classList.add('content-fade-in');
       
+      // Set up any new hidden links in the content
+      this.setupHiddenLinks();
+      
       // Remove the fade in class after animation completes
       setTimeout(() => {
         this.contentWrapper.classList.remove('content-fade-in');
       }, this.transitionDuration);
       
+      // Update current content reference
       this.currentContent = contentId;
       
       // Update browser history if needed
       if (updateHistory) {
         history.pushState({ content: contentId }, contentId, window.location.pathname);
       }
-      
-      // Reinitialize any event listeners on the new content
-      this.setupHiddenLinks();
-    }, 200); // Match this to the contentFadeOutDown animation duration
+    }, 300); // Match this to the contentFadeOutDown animation duration
   }
 };
 
