@@ -1,0 +1,44 @@
+/* Footer Section */
+
+.footer {
+    background-color: #030303;
+}
+
+.footer__container {
+    height: 8vh;
+    background-color: #030303;
+    width: 100%;
+    display: flex;
+    justify-self: center;
+    margin: 0 auto;
+    z-index: 1;
+    display: flex;
+    padding: 0 5%;
+    opacity: 0;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+    animation-delay: calc(var(--anim-offset)*3);
+}
+
+.footer__content {
+    color: #f8f8f8;
+    font-size: 1.5vh;
+    width: 100%;
+    text-align: center;
+}
+
+#footer__logo {
+    background-color: #FFFFFF;
+    background-image: linear-gradient(to top, #b2b2b2 0%, #f8f8f8 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 2.5vh;
+    font-weight: normal;
+    justify-content: center;
+}

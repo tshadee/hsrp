@@ -248,6 +248,18 @@ const ContentLoader = {
       .content-animated p:nth-of-type(5) {
         animation-delay: calc(var(--anim-offset) * 4);
       }
+
+      .content-animated p:nth-of-type(6) {
+        animation-delay: calc(var(--anim-offset) * 4.5);
+      }
+
+      .content-animated p:nth-of-type(7) {
+        animation-delay: calc(var(--anim-offset) * 5);
+      }
+
+      .content-animated p:nth-of-type(8) {
+        animation-delay: calc(var(--anim-offset) * 5.5);
+      }
       
       .content-animated div:not(.main__content) {
         opacity: 0;

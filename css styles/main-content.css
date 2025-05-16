@@ -1,0 +1,104 @@
+.main {
+    background-color: #030303;
+    z-index: 3;
+}
+
+.main__container {
+    height: 84vh;
+    /* background: linear-gradient(to top, #030303 0%,#171935 100%),
+    repeating-linear-gradient(45deg,
+            rgba(255, 255, 255, 0.01) 0px,
+            rgba(255, 255, 255, 0.01) 1px,
+            transparent 1px,
+            transparent 2px); */
+    background-blend-mode: overlay;
+    margin: 0 auto;
+    z-index: 3;
+    width: clamp(300px, 100%, 100%);
+    padding: 0 5%;
+    align-items: center;
+    justify-self: center;
+    animation: fadeInOnly calc(var(--a-duration)*4) ease-in-out forwards;
+    display: flex;
+}
+
+.main__content h1 {
+    font-weight: 450;
+    font-size: clamp(1.2rem, 8.33vw, 5rem);
+    width: 100%;
+    opacity: 0;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+    animation-delay: var(--anim-offset);
+    color: #fcfcfc;
+}
+
+.main__content p {
+    opacity: 0;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+    animation-delay: calc(var(--anim-offset)*2);
+    font-size: clamp(5px, 2.7vw, 1.5rem);
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    color: #dbdbdb;
+}
+
+.main__content p:nth-of-type(1) {
+    margin-bottom: 1rem;
+}
+
+.hidden-link {
+    text-decoration: none;
+    color: transparent;
+    position: relative;
+    opacity: 1;
+    text-decoration: none;
+    cursor: default;
+    transform: scale(1);
+    display: inline-block;
+    border-bottom: 2px dashed rgba(138, 173, 255, 0.3);
+}
+
+.hidden-link:hover {
+    color: #8aadff;
+    transform: scale(1.02);
+    transition: all 0.4s ease-in-out;
+    border-bottom: 2px dashed rgba(138, 173, 255, 0);
+}
+
+.hidden-link-red {
+    text-decoration: none;
+    color: transparent;
+    position: relative;
+    opacity: 1;
+    text-decoration: none;
+    cursor: default;
+    transform: scale(1);
+    display: inline-block;
+    border-bottom: 2px dashed rgba(255, 138, 138, 0.3);
+}
+
+.hidden-link-red:hover {
+    color: #ff8a8a;
+    transform: scale(1.02);
+    transition: all 0.4s ease-in-out;
+    border-bottom: 2px dashed rgba(255, 138, 138, 0);
+}
+
+.hidden-link-hyper {
+    text-decoration: none;
+    color: transparent;
+    position: relative;
+    opacity: 1;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    border-bottom: 2px dashed rgba(255, 138, 138, 0.3);
+}
+
+.hidden-link-hyper:hover {
+    color: #ff8a8a;
+    transform: scale(1.02);
+    transition: all 0.4s ease-in-out;
+    border-bottom: 2px dashed rgba(255, 138, 138, 0);
+}
