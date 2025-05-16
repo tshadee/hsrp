@@ -27,7 +27,7 @@ const ContentLoader = {
     this.currentBackground = this.defaultBackground;
     
     this.setupMainContainer();     // Modify main container to separate content from background
-    this.createBackgroundElements();
+    this.createBackgroundElements(0);
     this.setupNavigation();
     this.setupHiddenLinks();
     
@@ -78,61 +78,70 @@ const ContentLoader = {
     this.contentWrapper = contentWrapper;
   },
 
-  createBackgroundElements: function() {
-    // Get all potential content IDs from your navigation
-    const contentIds = ['home'];
-    document.querySelectorAll('[data-dialog]').forEach(link => {
-      contentIds.push(link.getAttribute('data-dialog'));
-    });
-    
-    // Create a background container
-    const backgroundContainer = document.createElement('div');
-    backgroundContainer.className = 'background-container';
-    backgroundContainer.style.position = 'absolute';
-    backgroundContainer.style.top = '0';
-    backgroundContainer.style.left = '0';
-    backgroundContainer.style.width = '100%';
-    backgroundContainer.style.height = '100%';
-    backgroundContainer.style.zIndex = '0';
-    
-    // Create and store background elements for each content ID
-    this.backgroundElements = {};
-    
-    // Add home background first (will be visible by default)
-    const homeBackground = document.createElement('div');
-    homeBackground.className = 'background background--home background--active';
-    homeBackground.style.position = 'absolute';
-    homeBackground.style.top = '0';
-    homeBackground.style.left = '0';
-    homeBackground.style.width = '100%';
-    homeBackground.style.height = '100%';
-    homeBackground.style.background = this.defaultBackground;
-    homeBackground.style.opacity = '1';
-    homeBackground.style.transition = 'opacity 0.6s ease';
-    
-    backgroundContainer.appendChild(homeBackground);
-    this.backgroundElements['home'] = homeBackground;
-    
-    // Add other backgrounds (initially invisible)
-    for (const id of contentIds) {
-      if (id === 'home') continue; // Skip home as we already added it
+  createBackgroundElements: function(new_bg) 
+  {
+    // Create a background container if it doesn't exist
+    if (!this.backgroundContainer) {
+      const backgroundContainer = document.createElement('div');
+      backgroundContainer.className = 'background-container';
+      backgroundContainer.style.position = 'absolute';
+      backgroundContainer.style.top = '0';
+      backgroundContainer.style.left = '0';
+      backgroundContainer.style.width = '100%';
+      backgroundContainer.style.height = '100%';
+      backgroundContainer.style.zIndex = '0';
       
-      const background = document.createElement('div');
-      background.className = `background background--${id}`;
-      background.style.position = 'absolute';
-      background.style.top = '0';
-      background.style.left = '0';
-      background.style.width = '100%';
-      background.style.height = '100%';
-      background.style.opacity = '0';
-      background.style.transition = 'opacity 0.6s ease';
-      
-      backgroundContainer.appendChild(background);
-      this.backgroundElements[id] = background;
+      this.mainContainer.appendChild(backgroundContainer);
+      this.backgroundContainer = backgroundContainer;
     }
     
-    this.mainContainer.appendChild(backgroundContainer);
-    this.backgroundContainer = backgroundContainer;
+    // Initialize the background elements object if needed
+    if (!this.backgroundElements) {
+      this.backgroundElements = {};
+    }
+    
+    // If creating initial backgrounds
+    if (!new_bg) 
+    {
+      // Get all potential content IDs from your navigation
+      const contentIds = ['home'];
+      document.querySelectorAll('[data-dialog]').forEach(link => {
+        contentIds.push(link.getAttribute('data-dialog'));
+      });
+      
+      // Add home background first (will be visible by default)
+      const homeBackground = document.createElement('div');
+      homeBackground.className = 'background background--home background--active';
+      homeBackground.style.position = 'absolute';
+      homeBackground.style.top = '0';
+      homeBackground.style.left = '0';
+      homeBackground.style.width = '100%';
+      homeBackground.style.height = '100%';
+      homeBackground.style.background = this.defaultBackground;
+      homeBackground.style.opacity = '1';
+      homeBackground.style.transition = 'opacity 0.6s ease';
+      
+      this.backgroundContainer.appendChild(homeBackground);
+      this.backgroundElements['home'] = homeBackground;
+      
+      // Add other backgrounds (initially invisible)
+      for (const id of contentIds) {
+        if (id === 'home') continue; // Skip home as we already added it
+        
+        const background = document.createElement('div');
+        background.className = `background background--${id}`;
+        background.style.position = 'absolute';
+        background.style.top = '0';
+        background.style.left = '0';
+        background.style.width = '100%';
+        background.style.height = '100%';
+        background.style.opacity = '0';
+        background.style.transition = 'opacity 0.6s ease';
+        
+        this.backgroundContainer.appendChild(background);
+        this.backgroundElements[id] = background;
+      }
+    }
   },
 
   // Method to show the background for a specific content ID
@@ -294,21 +303,20 @@ const ContentLoader = {
   
   // Setup hidden links click handlers
   setupHiddenLinks: function() {
-    setTimeout(() => {
-      const hiddenLinks = document.querySelectorAll('.hidden-link');
-      hiddenLinks.forEach(link => {
-        // Remove any existing click handlers to prevent duplicates
-        const clone = link.cloneNode(true);
-        link.parentNode.replaceChild(clone, link);
-        
-        clone.addEventListener('click', (e) => {
-          e.preventDefault();
-          // Get the text content of the link to use as the content ID
-          const contentId = clone.textContent.trim().toLowerCase();
-          this.loadContent(contentId, true);
-        });
+    const hiddenLinks = this.contentWrapper.querySelectorAll('.hidden-link');
+    hiddenLinks.forEach(link => {
+      // Remove any existing click handlers to prevent duplicates
+      const clone = link.cloneNode(true);
+      link.parentNode.replaceChild(clone, link);
+      
+      clone.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Get the text content of the link to use as the content ID
+        const contentId = clone.getAttribute('data-dialog');
+        // const contentId = clone.textContent.trim().toLowerCase();
+        this.loadContent(contentId, true);
       });
-    }, 50); // Small delay to ensure DOM is ready
+    });
   },
   
   // Extract background from CSS content
@@ -332,7 +340,9 @@ const ContentLoader = {
     // If content is in cache, load it immediately
     if (this.contentCache[contentId]) {
       this.transitionContent(this.contentCache[contentId], contentId, updateHistory);
-    } else {
+    } 
+    else 
+    {
       // Otherwise, fetch from server
       this.fetchContent(contentId)
         .then(content => {
@@ -368,6 +378,9 @@ const ContentLoader = {
       this.showBackground('home');
       return Promise.resolve();
     }
+    
+    // Ensure we have a background element for this content
+    this.ensureBackgroundElement(contentId);
     
     // Check if we have CSS for this content
     if (this.cssCache[contentId]) {
@@ -458,6 +471,23 @@ const ContentLoader = {
     }
   },
   
+  ensureBackgroundElement: function(contentId) {
+    if (!this.backgroundElements[contentId]) {
+      const background = document.createElement('div');
+      background.className = `background background--${contentId}`;
+      background.style.position = 'absolute';
+      background.style.top = '0';
+      background.style.left = '0';
+      background.style.width = '100%';
+      background.style.height = '100%';
+      background.style.opacity = '0';
+      background.style.transition = 'opacity 0.6s ease';
+      
+      this.backgroundContainer.appendChild(background);
+      this.backgroundElements[contentId] = background;
+    }
+  },
+
   transitionContent: function(newContent, contentId, updateHistory) {
     // Add class for fade out animation to content wrapper
     this.contentWrapper.classList.add('content-fade-out');

@@ -284,12 +284,12 @@
 
 .main__container {
     height: 84vh;
-    background: linear-gradient(to top, #030303 0%,#171935 100%),
+    /* background: linear-gradient(to top, #030303 0%,#171935 100%),
     repeating-linear-gradient(45deg,
             rgba(255, 255, 255, 0.01) 0px,
             rgba(255, 255, 255, 0.01) 1px,
             transparent 1px,
-            transparent 2px);
+            transparent 2px); */
     background-blend-mode: overlay;
     margin: 0 auto;
     z-index: 3;
