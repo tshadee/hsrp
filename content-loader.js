@@ -3,6 +3,12 @@ const ContentLoader = {
     // Cache for loaded content
     contentCache: {},
     
+    // Cache for loaded CSS
+    cssCache: {},
+    
+    // Track currently loaded CSS files
+    loadedStylesheets: new Set(),
+    
     // Current active content
     currentContent: 'home',
     
@@ -85,7 +91,7 @@ const ContentLoader = {
           .catch(error => {
             console.error('Error loading content:', error);
             // Optional: Show error message in main container
-            mainContainer.innerHTML = `<div class="main__content"><h1>Content Not Found</h1><p>Sorry, the requested content could not be loaded.</p></div>`;
+            mainContainer.innerHTML = `<div class="main__content"><h1>Content Missing</h1><p>If you know how to contact me - do so. This is unacceptable !!!</p><p>Reload the page as well...every link is now broken... (click hsrp.cc at the bottom for a hard reload)</div>`;
           });
       }
     },
@@ -98,7 +104,78 @@ const ContentLoader = {
             throw new Error('Content not found');
           }
           return response.text();
+        })
+        .then(content => {
+          // Also try to load matching CSS file
+          this.loadContentCSS(contentId);
+          return content;
         });
+    },
+    
+    // Load content-specific CSS file
+    loadContentCSS: function(contentId) {
+      // Check if we already have this CSS in cache
+      if (this.cssCache[contentId]) {
+        this.applyContentCSS(contentId, this.cssCache[contentId]);
+        return Promise.resolve();
+      }
+      
+      // Try to fetch the CSS file
+      return fetch(`content/${contentId}.css`)
+        .then(response => {
+          if (!response.ok) {
+            // If CSS doesn't exist, just ignore - it's optional
+            return null;
+          }
+          return response.text();
+        })
+        .then(cssText => {
+          if (cssText) {
+            // Cache the CSS
+            this.cssCache[contentId] = cssText;
+            // Apply the CSS
+            this.applyContentCSS(contentId, cssText);
+          }
+        })
+        .catch(error => {
+          console.log('No CSS file for this content (this is okay):', error);
+        });
+    },
+    
+    // Apply content-specific CSS to the page
+    applyContentCSS: function(contentId, cssText) {
+      // Create a unique ID for this stylesheet
+      const styleId = `content-style-${contentId}`;
+      
+      // If we already have this style loaded, don't add it again
+      if (this.loadedStylesheets.has(styleId)) {
+        return;
+      }
+      
+      // Create a new style element
+      const styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      styleElement.textContent = cssText;
+      
+      // Add it to the document head
+      document.head.appendChild(styleElement);
+      
+      // Track that we've added this stylesheet
+      this.loadedStylesheets.add(styleId);
+    },
+    
+    // Remove content-specific CSS when not needed
+    removeContentCSS: function(contentId) {
+      const styleId = `content-style-${contentId}`;
+      
+      // If this stylesheet is loaded, remove it
+      if (this.loadedStylesheets.has(styleId)) {
+        const styleElement = document.getElementById(styleId);
+        if (styleElement) {
+          styleElement.remove();
+          this.loadedStylesheets.delete(styleId);
+        }
+      }
     },
     
     // Handle the content transition with animation
@@ -108,6 +185,14 @@ const ContentLoader = {
       
       // After fade out, update content and fade back in
       setTimeout(() => {
+        // If we're changing content, handle CSS management
+        if (this.currentContent !== contentId) {
+          // Remove the old content's CSS if it exists
+          if (this.currentContent !== 'home') {
+            this.removeContentCSS(this.currentContent);
+          }
+        }
+        
         container.innerHTML = newContent;
         this.currentContent = contentId;
         
