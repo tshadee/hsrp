@@ -119,7 +119,7 @@ const ContentLoader = {
       homeBackground.style.height = '100%';
       homeBackground.style.background = this.defaultBackground;
       homeBackground.style.opacity = '1';
-      homeBackground.style.transition = 'opacity 0.6s ease';
+      homeBackground.style.transition = 'opacity 0.5s ease';
       
       this.backgroundContainer.appendChild(homeBackground);
       this.backgroundElements['home'] = homeBackground;
@@ -136,7 +136,7 @@ const ContentLoader = {
         background.style.width = '100%';
         background.style.height = '100%';
         background.style.opacity = '0';
-        background.style.transition = 'opacity 0.6s ease';
+        background.style.transition = 'opacity 0.5s ease';
         
         this.backgroundContainer.appendChild(background);
         this.backgroundElements[id] = background;
@@ -230,6 +230,7 @@ const ContentLoader = {
       
       .content-animated p:nth-of-type(1) {
         animation-delay: calc(var(--anim-offset) * 2);
+        margin-bottom: 1rem;
       }
       
       .content-animated p:nth-of-type(2) {
@@ -267,7 +268,7 @@ const ContentLoader = {
 
       /* Background transition */
       .main__background {
-        transition: background 0.6s ease-in-out;
+        transition: background 0.5s ease-in-out;
       }
     `;
     
@@ -352,7 +353,7 @@ const ContentLoader = {
         .catch(error => {
           console.error('Error loading content:', error);
           // Optional: Show error message in main container
-          this.contentWrapper.innerHTML = `<div class="main__content"><h1>content missing</h1><p>if you know how to contact me - do so. this is unacceptable !</p><p>once you've done that, use the navigation bar above</div>`;
+          this.contentWrapper.innerHTML = `<div class="main__content"><h1>content missing</h1><p>if you know how to contact me - do so. this is unacceptable !</p><p>once you've done that, go look somewhere else</div>`;
         });
     }
   },

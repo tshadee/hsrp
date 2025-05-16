@@ -47,7 +47,7 @@
 :root {
     --main--black-color: #030303;
     --heading-font-size: 70px;
-    --a-duration: 0.55s;
+    --a-duration: 0.5s;
     --y-slide-dist: -20px;
     --anim-offset: 0.25s;
     --content-background: linear-gradient(to top, #030303 0%, #171935 100%),
@@ -322,6 +322,10 @@
     color: #dbdbdb;
 }
 
+.main__content p:nth-of-type(1){
+    margin-bottom: 1rem;
+}
+
 .hidden-link {
     text-decoration: none;
     color: transparent;
@@ -336,7 +340,7 @@
 
 .hidden-link:hover {
     color: #8aadff;
-    transform: scale(1.03);
+    transform: scale(1.02);
     transition: all 0.4s ease-in-out;
     border-bottom: 2px dashed rgba(138, 173, 255, 0);
 }
@@ -349,14 +353,14 @@
     text-decoration: none;
     cursor: pointer;
     display: inline-block;
-    border-bottom: 2px dashed rgba(138, 173, 255, 0.3);
+    border-bottom: 2px dashed rgba(255, 138, 138, 0.3);
 }
 
 .hidden-link-hyper:hover {
-    color: #8aadff;
-    transform: scale(1.03);
+    color: #ff8a8a;
+    transform: scale(1.02);
     transition: all 0.4s ease-in-out;
-    border-bottom: 2px dashed rgba(138, 173, 255, 0);
+    border-bottom: 2px dashed rgba(255, 138, 138, 0);
 }
 
 
