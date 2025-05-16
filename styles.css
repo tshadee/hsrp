@@ -70,7 +70,7 @@
     justify-content: space-between;
     height: 8vh;
     z-index: 1;
-    width: clamp(300px,100%,2000px);
+    width: clamp(300px,100%,100%);
     margin: 0 auto;
     padding: 0 5vh;
     animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
@@ -287,7 +287,7 @@
         background-blend-mode: overlay;
     margin: 0 auto;
     z-index: 1;
-    width: clamp(300px,100%,2000px);
+    width: clamp(300px,100%,100%);
     padding: 0 5%;
     align-items: center;
     justify-self: center;
@@ -348,6 +348,7 @@
     color: #8aadff;
     transform: scale(1.03);
     transition: all 0.4s ease-in-out;
+    border-bottom: 2px dashed rgba(138, 173, 255, 0.1);
 }
 
 .hidden-link-hyper {
@@ -365,6 +366,7 @@
     color: #8aadff;
     transform: scale(1.03);
     transition: all 0.4s ease-in-out;
+    border-bottom: 2px dashed rgba(138, 173, 255, 0.1);
 }
 
 
@@ -415,4 +417,118 @@
     font-size: 2.5vh;
     font-weight: normal;
     justify-content: center;
+}
+
+/* Data Dialogue and Page Transitions */
+
+.main__container {
+    transition: opacity 0.3s ease;
+}
+
+/* Section content styling */
+.section__content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 2rem 0;
+}
+
+.section__content h1 {
+    font-weight: 450;
+    font-size: clamp(1.2rem, 8.33vw, 5rem);
+    width: 100%;
+    color: #fcfcfc;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+    margin-bottom: 2rem;
+}
+
+.content-section {
+    width: 100%;
+    margin-bottom: 2rem;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+    animation-delay: calc(var(--anim-offset));
+}
+
+.content-section h2 {
+    font-size: clamp(1rem, 4vw, 2.5rem);
+    color: #8aadff;
+    margin-bottom: 1rem;
+}
+
+.content-section h3 {
+    font-size: clamp(0.8rem, 3vw, 1.8rem);
+    color: #f8f8f8;
+    margin-bottom: 0.5rem;
+}
+
+.content-section p {
+    font-size: clamp(0.7rem, 2.7vw, 1.5rem);
+    color: #dbdbdb;
+    white-space: normal;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+    animation-delay: calc(var(--anim-offset)*2);
+}
+
+.content-section ul {
+    list-style-position: inside;
+    padding-left: 1rem;
+    color: #dbdbdb;
+    font-size: clamp(0.7rem, 2.7vw, 1.5rem);
+    margin-bottom: 1rem;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+    animation-delay: calc(var(--anim-offset)*2);
+}
+
+.content-section li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+/* Resume specific styling */
+.resume-item {
+    margin-bottom: 1.5rem;
+}
+
+.resume-date {
+    font-style: italic;
+    color: #8aadff;
+    margin-bottom: 0.5rem;
+    font-size: clamp(0.6rem, 2.2vw, 1.2rem);
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.skills-list li {
+    background-color: rgba(138, 173, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
+    animation-delay: calc(var(--anim-offset)*3);
+}
+
+/* Active navigation styling */
+.active-nav .navbar__links {
+    color: #8aadff;
+    transform: scale(1.1);
+}
+
+/* Making mobile responsive */
+@media screen and (max-width: 768px) {
+    .section__content {
+        padding: 1rem 0;
+    }
+
+    .content-section {
+        margin-bottom: 1.5rem;
+    }
 }
