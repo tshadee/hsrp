@@ -20,8 +20,8 @@
 }
 
 .footer__content {
-    color: #f8f8f8;
-    font-size: 1.5vh;
+    color: #a3a3a3;
+    font-size: 1.7vh;
     width: 100%;
     text-align: center;
 }
@@ -38,7 +38,25 @@
     align-items: center;
     cursor: pointer;
     text-decoration: none;
-    font-size: 2.5vh;
+    font-size: 2.8vh;
     font-weight: normal;
     justify-content: center;
+}
+
+.normal-link-hyper {
+    text-decoration: none;
+    color: #a3a3a3;
+    position: relative;
+    opacity: 1;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    /* border-bottom: 2px dashed rgba(255, 138, 138, 0.3); */
+}
+
+.normal-link-hyper:hover {
+    color: #8aadff;
+    transform: scale(1.02);
+    transition: all 0.4s ease-in-out;
+    /* border-bottom: 2px dashed rgba(255, 138, 138, 0); */
 }

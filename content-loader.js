@@ -119,7 +119,7 @@ const ContentLoader = {
       homeBackground.style.height = '100%';
       homeBackground.style.background = this.defaultBackground;
       homeBackground.style.opacity = '1';
-      homeBackground.style.transition = 'opacity 0.5s ease';
+      homeBackground.style.transition = 'opacity 0.4s ease';
       
       this.backgroundContainer.appendChild(homeBackground);
       this.backgroundElements['home'] = homeBackground;
@@ -136,7 +136,7 @@ const ContentLoader = {
         background.style.width = '100%';
         background.style.height = '100%';
         background.style.opacity = '0';
-        background.style.transition = 'opacity 0.5s ease';
+        background.style.transition = 'opacity 0.4s ease';
         
         this.backgroundContainer.appendChild(background);
         this.backgroundElements[id] = background;
@@ -209,11 +209,11 @@ const ContentLoader = {
       }
       
       .content-fade-out {
-        animation: contentFadeOutDown 0.3s ease-in-out forwards;
+        animation: contentFadeOutDown 0.25s ease-in-out forwards;
       }
       
       .content-fade-in {
-        animation: contentFadeInUp 0.3s ease-in-out forwards;
+        animation: contentFadeInUp 0.25s ease-in-out forwards;
       }
 
       /* Content Animations */
@@ -280,7 +280,7 @@ const ContentLoader = {
 
       /* Background transition */
       .main__background {
-        transition: background 0.5s ease-in-out;
+        transition: background 0.4s ease-in-out;
       }
     `;
     
@@ -325,11 +325,28 @@ const ContentLoader = {
       clone.addEventListener('click', (e) => {
         e.preventDefault();
         // Get the text content of the link to use as the content ID
-        // const contentId = clone.getAttribute('data-dialog');
         const contentId = clone.textContent.trim().toLowerCase();
+        if(!contentId)
+        {
+          contentId = clone.getAttribute('data-dialog');
+        }
         this.loadContent(contentId, true);
       });
     });
+    const hiddenLinksRed = this.contentWrapper.querySelectorAll('.hidden-link-red');
+    hiddenLinksRed.forEach(link => {
+      // Remove any existing click handlers to prevent duplicates
+      const clone = link.cloneNode(true);
+      link.parentNode.replaceChild(clone, link);
+      
+      clone.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Get the text content of the link to use as the content ID
+        contentId = clone.getAttribute('data-dialog');
+        this.loadContent(contentId, true);
+      });
+    });
+
   },
   
   // Extract background from CSS content
@@ -494,7 +511,7 @@ const ContentLoader = {
       background.style.width = '100%';
       background.style.height = '100%';
       background.style.opacity = '0';
-      background.style.transition = 'opacity 0.6s ease';
+      background.style.transition = 'opacity 0.4s ease';
       
       this.backgroundContainer.appendChild(background);
       this.backgroundElements[contentId] = background;

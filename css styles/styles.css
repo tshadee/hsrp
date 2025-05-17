@@ -11,6 +11,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    user-select: none;
     font-family: 'CMU Serif', sans-serif;
 }
 
@@ -19,11 +20,13 @@
 @keyframes fadeSlideIn {
     0% {
         opacity: 0;
+        filter: blur(50);
         transform: translateY(-10px);
     }
 
     100% {
         opacity: 1;
+        filter: blur(0);
         transform: translateY(0);
     }
 }
@@ -31,10 +34,12 @@
 @keyframes fadeInOnly {
     0% {
         opacity: 0;
+        filter: blur(1);
     }
 
     100% {
         opacity: 1;
+        filter: blur(0);
     }
 }
 
@@ -42,14 +47,21 @@
     transition: color 0.4s ease, background-color 0.4s ease, border-radius 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
 }
 
+.par-space {
+    color: transparent;
+    cursor: default;
+    user-select: none;
+    padding-bottom: 1rem;
+}
+
 
 /* Global variables  */
 :root {
     --main--black-color: #030303;
     --heading-font-size: 70px;
-    --a-duration: 0.5s;
+    --a-duration: 0.45s;
     --y-slide-dist: -20px;
-    --anim-offset: 0.25s;
+    --anim-offset: 0.23s;
     --content-background: linear-gradient(to top, #030303 0%, #171935 100%),
         repeating-linear-gradient(45deg,
             rgba(255, 255, 255, 0.01) 0px,
