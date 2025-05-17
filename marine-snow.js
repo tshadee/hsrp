@@ -156,9 +156,9 @@ function addAdvancedMarineSnowEffect() {
         particle.style.opacity = "0";
         container.appendChild(particle);
         this.snowParticles.push(particle);
-        requestAnimationFrame(() => {
+        setTimeout(() => {
             particle.style.opacity = baseOpacity;
-        });
+        }, 300);
 
         // FIFO limit enforcement
         if (this.snowParticles.length > config.particleCount) 
@@ -190,10 +190,10 @@ function addAdvancedMarineSnowEffect() {
       this.createMarineSnowEffect({
         particleCount: 300,          // Number of particles
         speedFactor: 0.2,           // Speed of falling (lower is slower)
-        minSize: 2,                 // Minimum particle size in pixels
-        maxSize: 6,                 // Maximum particle size in pixels
+        minSize: 3,                 // Minimum particle size in pixels
+        maxSize: 8,                 // Maximum particle size in pixels
         blurAmount: '2px',        // Blur filter amount
-        opacity: 0.35,               // Overall opacity of the effect
+        opacity: 0.4,               // Overall opacity of the effect
         color: 'rgba(255, 255, 255, 0.43)'  // Particle color
       });
       
