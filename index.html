@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="css styles/nav-bar.css">
     <link rel="stylesheet" href="css styles/footer-content.css">
     <link rel="icon" href="images/hsrp-logo.ico">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
 </head>
 
 <body>
@@ -20,6 +22,15 @@
                 <img src="images/hsrp-logo.png" class="navbar__logo-img">
                 hsrp
             </a>
+            <div class="navbar_search">
+                <form>
+                    <div class="search-bar">
+                        <span class="search-icon material-symbols-outlined">
+                            search </span>
+                        <input type="search" class="search-input" placeholder="search pages">
+                    </div>
+                </form>
+            </div>
             <div class="navbar__toggle" id="mobile-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -65,8 +76,8 @@
                 </p>
                 <p>if you are unsure, you are suggested to go to
                     <span class="tooltip wrapper">
-                        <i class="hidden-link transition-default" data-dialog="projects">
-                            projects
+                        <i class="hidden-link-red transition-default" data-dialog="what is hsrp">
+                            about
                         </i>
                     </span>
                     first

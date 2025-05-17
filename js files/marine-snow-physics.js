@@ -11,8 +11,8 @@ function addAdvancedMarineSnowEffect() {
                 layerId: `marineSnowCanvasLayer${i}`,
                 zIndex: 1 + i,
                 opacity: options.opacity * (1 - depth * 0.7), 
-                blurAmount: `calc(${options.blurAmount} * ${1 + depth * 1.5})`,
-                particleCount: Math.floor(options.particleCount * (1 - depth * 0.5)),
+                blurAmount: `calc(${options.blurAmount} * ${0.5 + depth * 1.5})`,
+                particleCount: Math.floor(options.particleCount * (1 + depth)),
                 minSize: options.minSize * (1 - depth * 0.3),
                 maxSize: options.maxSize * (1 - depth * 0.3),
                 terminalVelocity: options.terminalVelocity * (1 - depth * 0.4),
@@ -59,7 +59,7 @@ function addAdvancedMarineSnowEffect() {
                 x: Math.random() * width,
                 y: fullySeeded
                     ? Math.random() * height  * 1.1       // little above view height (overlap)
-                    : Math.random() * -height * 0.5,      // above view during normal respawn
+                    : Math.random() * - height * 0.4,      // above view during normal respawn
                 r: Math.random() * (config.maxSize - config.minSize) + config.minSize,
                 vx: (Math.random() - 0.5) * config.horizontalDrift,
                 vy: config.terminalVelocity
@@ -138,18 +138,18 @@ function addAdvancedMarineSnowEffect() {
         originalInit.call(this);
 
         this.createMarineSnowEffect({
-            layers: 3,
-            particleCount: 400,
+            layers: 10,
+            particleCount: 500,
             speedFactor: 0.15,
             minSize: 2,
-            maxSize: 5,
-            blurAmount: '2px',
-            opacity: 0.5,
+            maxSize: 4,
+            blurAmount: '1.5px',
+            opacity: 0.6,
             color: 'rgba(255, 255, 255, 0.45)',
             terminalVelocity: 0.4,
             horizontalDrift: 0.15,
             mouseInfluenceRadius: 80,
-            mouseForce: 0.01
+            mouseForce: 0.06
         });
     };
   };
