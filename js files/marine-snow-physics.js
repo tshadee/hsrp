@@ -15,7 +15,7 @@ function addAdvancedMarineSnowEffect() {
                 particleCount: Math.floor(options.particleCount * (1 + depth)),
                 minSize: options.minSize * (1 - depth * 0.3),
                 maxSize: options.maxSize * (1 - depth * 0.3),
-                terminalVelocity: options.terminalVelocity * (1 - depth * 0.4),
+                terminalVelocity: options.terminalVelocity * (1 - depth * 0.6),
                 mouseInfluenceRadius: options.mouseInfluenceRadius * (1 - depth * 0.6),
                 mouseForce: options.mouseForce * (1 - depth * 0.6)
             };
@@ -73,8 +73,14 @@ function addAdvancedMarineSnowEffect() {
             
         
             document.addEventListener('mousemove', (e) => {
-                mouse.x = e.clientX;
-                mouse.y = e.clientY;
+                const rect = container.getBoundingClientRect();
+
+                // normalized coordinates (0 to 1)
+                // const normX = (e.clientX - rect.left) / rect.width;
+                const normY = (e.clientY - rect.top) / rect.height;
+
+                mouse.x = e.clientX; //change this to normX * width if the canvas no longer stretches from side to side (100vw)
+                mouse.y = normY * height;
             });
         
             const animate = () => {
@@ -94,8 +100,8 @@ function addAdvancedMarineSnowEffect() {
                 }
         
                 // Apply drag
-                p.vx *= 0.99;
-                p.vy *= 0.99;
+                p.vx *= 0.990;
+                p.vy *= 0.990;
         
                 // Limit vertical speed (simulate terminal velocity)
                 if (p.vy < config.terminalVelocity) {
@@ -140,7 +146,7 @@ function addAdvancedMarineSnowEffect() {
         this.createMarineSnowEffect({
             layers: 10,
             particleCount: 500,
-            speedFactor: 0.15,
+            speedFactor: 0.25,
             minSize: 2,
             maxSize: 4,
             blurAmount: '1.5px',
@@ -148,8 +154,8 @@ function addAdvancedMarineSnowEffect() {
             color: 'rgba(255, 255, 255, 0.45)',
             terminalVelocity: 0.4,
             horizontalDrift: 0.15,
-            mouseInfluenceRadius: 80,
-            mouseForce: 0.06
+            mouseInfluenceRadius: 70,
+            mouseForce: 0.15
         });
     };
   };
