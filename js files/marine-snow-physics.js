@@ -22,6 +22,19 @@ function addAdvancedMarineSnowEffect() {
       
             createMarineSnowLayer(this.mainContainer, layerConfig);
         };
+
+        function getFlowVector(x, y, time) {
+            const spatialScale = 0.0010;   // spatial scale 
+            const currentStrength = 0.05;
+            const flowX = Math.sin(x * spatialScale + time * 0.0005);
+            const flowY = Math.cos(y * spatialScale + time * 0.0005 + 100); // offset for variation
+        
+            return {
+                x: flowX * currentStrength,
+                y: flowY * currentStrength
+            };
+        }
+        
   
         function createMarineSnowLayer(container,config)
         {
@@ -45,6 +58,9 @@ function addAdvancedMarineSnowEffect() {
             let width, height;
             const particles = [];
             let mouse = { x: null, y: null };
+            let prevMouse = { x: null, y: null };
+            let mouseVelocity = { x: 0, y: 0 };
+            let lastTimestamp = performance.now();
         
             const resize = () => {
                 width = canvas.width = canvas.offsetWidth = window.innerWidth;
@@ -74,38 +90,63 @@ function addAdvancedMarineSnowEffect() {
         
             document.addEventListener('mousemove', (e) => {
                 const rect = container.getBoundingClientRect();
-
-                // normalized coordinates (0 to 1)
-                // const normX = (e.clientX - rect.left) / rect.width;
+                const normX = (e.clientX - rect.left) / rect.width;
                 const normY = (e.clientY - rect.top) / rect.height;
-
-                mouse.x = e.clientX; //change this to normX * width if the canvas no longer stretches from side to side (100vw)
+            
+                mouse.x = normX * width;
                 mouse.y = normY * height;
             });
+            
         
             const animate = () => {
                 ctx.clearRect(0, 0, width, height);
-        
+                const now = performance.now();
+                const deltaTime = (now - lastTimestamp) / 1000 || 0.016; // default ~60fps
+                lastTimestamp = now;
+
+                if (mouse.x !== null && mouse.y !== null && prevMouse.x !== null && prevMouse.y !== null) {
+                    mouseVelocity.x = (mouse.x - prevMouse.x) / deltaTime;
+                    mouseVelocity.y = (mouse.y - prevMouse.y) / deltaTime;
+                } else {
+                    mouseVelocity.x = 0;
+                    mouseVelocity.y = 0;
+                }
+
+                prevMouse.x = mouse.x;
+                prevMouse.y = mouse.y;
+                
+                
+
+            
                 for (let p of particles) {
                 if (mouse.x !== null && mouse.y !== null) {
                     const dx = p.x - mouse.x;
                     const dy = p.y - mouse.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < config.mouseInfluenceRadius) {
-                    const angle = Math.atan2(dy, dx);
-                    const force = (1 - dist / config.mouseInfluenceRadius) * config.mouseForce;
-                    p.vx += Math.cos(angle) * force;
-                    p.vy += Math.sin(angle) * force;
+                    const distSq = dx * dx + dy * dy;
+                    const effectiveRadius = config.mouseInfluenceRadius * 2; //2x radius cutoff
+                    const maxDistSq = effectiveRadius * effectiveRadius;
+                    
+                    if (distSq < maxDistSq) {
+                        const dist = Math.sqrt(distSq); //reduced compute
+                        if (dist < config.mouseInfluenceRadius) {
+                            const influence = Math.max(0, 1 - Math.log(dist + 1) / Math.log(config.mouseInfluenceRadius + 1));
+                            p.vx += mouseVelocity.x * influence * config.mouseForce;
+                            p.vy += mouseVelocity.y * influence * config.mouseForce;
+                        }
                     }
+
+                    const flow = getFlowVector(p.x, p.y, now);
+                    p.vx += flow.x * deltaTime;
+                    p.vy += flow.y * deltaTime;                    
                 }
         
                 // Apply drag
-                p.vx *= 0.990;
-                p.vy *= 0.990;
+                p.vx *= 0.991;
+                p.vy *= 0.991;
         
                 // Limit vertical speed (simulate terminal velocity)
                 if (p.vy < config.terminalVelocity) {
-                    p.vy += 0.001;
+                    p.vy += 0.0013;
                 } else {
                     p.vy = config.terminalVelocity;
                 }
@@ -149,13 +190,13 @@ function addAdvancedMarineSnowEffect() {
             speedFactor: 0.25,
             minSize: 2,
             maxSize: 4,
-            blurAmount: '1.5px',
+            blurAmount: '1.8px',
             opacity: 0.6,
             color: 'rgba(255, 255, 255, 0.45)',
             terminalVelocity: 0.4,
             horizontalDrift: 0.15,
-            mouseInfluenceRadius: 70,
-            mouseForce: 0.15
+            mouseInfluenceRadius: 90,
+            mouseForce: 0.0008
         });
     };
   };
