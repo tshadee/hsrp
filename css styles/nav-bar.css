@@ -78,6 +78,7 @@
     background: transparent;
     border: none;
     flex:1;
+    transition: color 0.1s ease-in-out;
 }
 
 .search-input::placeholder, .search-icon {
@@ -87,6 +88,32 @@
 .search-bar:focus-within{
     background: #151515;
 }
+
+.search-input--error {
+    color: rgb(210, 100, 100);
+    animation: shake 0.2s ease;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-2px);
+    }
+
+    50% {
+        transform: translateX(2px);
+    }
+
+    75% {
+        transform: translateX(-2px);
+    }
+
+    100% {
+        transform: translateX(0);
+    } }
 
 .navbar__item {
     height: 8vh;

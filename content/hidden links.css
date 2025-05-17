@@ -1,0 +1,8 @@
+:root {
+    --content-background: linear-gradient(to top, #030303 0%, #8aadff 100%),
+        repeating-linear-gradient(45deg,
+            rgba(255, 255, 255, 0.01) 0px,
+            rgba(255, 255, 255, 0.01) 1px,
+            transparent 1px,
+            transparent 2px);
+}

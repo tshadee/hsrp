@@ -30,6 +30,7 @@ const ContentLoader = {
     this.createBackgroundElements(0);
     this.setupNavigation();
     this.setupHiddenLinks();
+    this.setupSearchBar();
     
     // Add a history state handler
     window.addEventListener('popstate', (event) => {
@@ -347,6 +348,40 @@ const ContentLoader = {
       });
     });
 
+  },
+
+  setupSearchBar: function() {
+    const searchInput = document.querySelector('.search-input');
+    if(!searchInput) return;
+
+    searchInput.addEventListener('keydown', (event)=>{
+      if(event.key == 'Enter')
+      {
+        event.preventDefault();
+        const query = searchInput.value.trim().toLowerCase();
+        if(!query) return;
+        const testQuery = `content/${query}.html`;
+        fetch(testQuery)
+        .then(response => {
+          if(response.ok) {
+            this.loadContent(query,true);
+            searchInput.value = '';
+          } else {
+            this.showSearchError(searchInput);
+          }
+        })
+        .catch(() => {
+          this.showSearchError(searchInput)
+        })
+      }
+    });
+  },
+
+  showSearchError: function(inputElem){
+    inputElem.classList.add('search-input--error');
+    setTimeout(() => {
+      inputElem.classList.remove('search-input--error');
+    }, 500);
   },
   
   // Extract background from CSS content
