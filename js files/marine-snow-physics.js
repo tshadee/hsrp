@@ -63,9 +63,14 @@ function addAdvancedMarineSnowEffect() {
             let lastTimestamp = performance.now();
         
             const resize = () => {
-                width = canvas.width = canvas.offsetWidth = window.innerWidth;
-                height = canvas.height = canvas.offsetHeight = window.innerHeight;
+                const rect = container.getBoundingClientRect();
+                width = rect.width;
+                height = rect.height;
+            
+                canvas.width = width;
+                canvas.height = height;
             };
+            
         
             window.addEventListener('resize', resize);
             resize();
@@ -74,7 +79,7 @@ function addAdvancedMarineSnowEffect() {
                 return {
                 x: Math.random() * width,
                 y: fullySeeded
-                    ? Math.random() * height  * 1.1       // little above view height (overlap)
+                    ? Math.random() * height  * 1.2       // little above view height (overlap)
                     : Math.random() * - height * 0.4,      // above view during normal respawn
                 r: Math.random() * (config.maxSize - config.minSize) + config.minSize,
                 vx: (Math.random() - 0.5) * config.horizontalDrift,
@@ -156,13 +161,13 @@ function addAdvancedMarineSnowEffect() {
                 p.y += p.vy;
         
                 // Respawn if off-screen
-                if (p.y > height) {
+                if ((p.y > (height*1.1)) || (p.x > (width * 1.1))) {
                     Object.assign(p, spawnParticle());
                 }
         
                 // Wrap X
-                if (p.x > width) p.x = 0;
-                if (p.x < 0) p.x = width;
+                // if (p.x > width) p.x = 0;
+                // if (p.x < 0) p.x = width;
         
                 // Draw
                 ctx.beginPath();
@@ -190,7 +195,7 @@ function addAdvancedMarineSnowEffect() {
             speedFactor: 0.25,
             minSize: 2,
             maxSize: 4,
-            blurAmount: '1.8px',
+            blurAmount: '1.6px',
             opacity: 0.6,
             color: 'rgba(255, 255, 255, 0.45)',
             terminalVelocity: 0.4,
