@@ -279,6 +279,10 @@ const ContentLoader = {
         animation-delay: calc(var(--anim-offset) * 5.5);
       }
 
+      .content-animated div:nth-of-type(4) {
+        animation-delay: calc(var(--anim-offset) * 6);
+      }
+
       /* Background transition */
       .main__background {
         transition: background 0.4s ease-in-out;
@@ -404,7 +408,9 @@ const ContentLoader = {
     
     // If content is in cache, load it immediately
     if (this.contentCache[contentId]) {
-      this.transitionContent(this.contentCache[contentId], contentId, updateHistory);
+      this.loadContentCSS(contentId).then(() => {
+        this.transitionContent(this.contentCache[contentId], contentId, updateHistory);
+      });
     } 
     else 
     {
@@ -502,38 +508,35 @@ const ContentLoader = {
   
   // Apply content-specific CSS to the page
   applyContentCSS: function(contentId, cssText) {
-    // Create a unique ID for this stylesheet
     const styleId = `content-style-${contentId}`;
-    
-    // If we already have this style loaded, don't add it again
-    if (this.loadedStylesheets.has(styleId)) {
-      return;
+
+    // Remove existing if any (defensive)
+    if(this.loadedStylesheets.has(styleId)) {
+      const existing = document.getElementById(styleId);
+      if (existing){
+        return;
+      } else {
+        this.loadedStylesheets.delete(styleId);
+      }
     }
-    
-    // Create a new style element
+
+    // Add fresh style
     const styleElement = document.createElement('style');
     styleElement.id = styleId;
     styleElement.textContent = cssText;
-    
-    // Add it to the document head
+
     document.head.appendChild(styleElement);
-    
-    // Track that we've added this stylesheet
     this.loadedStylesheets.add(styleId);
   },
   
   // Remove content-specific CSS when not needed
   removeContentCSS: function(contentId) {
     const styleId = `content-style-${contentId}`;
-    
-    // If this stylesheet is loaded, remove it
-    if (this.loadedStylesheets.has(styleId)) {
-      const styleElement = document.getElementById(styleId);
-      if (styleElement) {
-        styleElement.remove();
-        this.loadedStylesheets.delete(styleId);
-      }
+    const styleElement = document.getElementById(styleId);
+    if (styleElement) {
+      styleElement.remove();
     }
+    this.loadedStylesheets.delete(styleId);
   },
   
   ensureBackgroundElement: function(contentId) {

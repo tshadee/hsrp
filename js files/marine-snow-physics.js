@@ -12,12 +12,12 @@ function addAdvancedMarineSnowEffect() {
                 zIndex: 1 + i,
                 opacity: options.opacity * (1 - depth * 0.7), 
                 blurAmount: `calc(${options.blurAmount} * ${0.5 + depth * 1.5})`,
-                particleCount: Math.floor(options.particleCount * (1 + depth)),
-                minSize: options.minSize * (1 - depth * 0.3),
-                maxSize: options.maxSize * (1 - depth * 0.3),
+                particleCount: Math.floor(options.particleCount * (1 + depth*0.3)),
+                minSize: options.minSize * (1 - depth * 0.25),
+                maxSize: options.maxSize * (1 - depth * 0.25),
                 terminalVelocity: options.terminalVelocity * (1 - depth * 0.6),
-                mouseInfluenceRadius: options.mouseInfluenceRadius * (1 - depth * 0.6),
-                mouseForce: options.mouseForce * (1 - depth * 0.6)
+                mouseInfluenceRadius: options.mouseInfluenceRadius * (1 - depth * 0.7),
+                mouseForce: options.mouseForce * (1 - depth * 0.65)
             };
       
             createMarineSnowLayer(this.mainContainer, layerConfig);
@@ -151,7 +151,7 @@ function addAdvancedMarineSnowEffect() {
         
                 // Limit vertical speed (simulate terminal velocity)
                 if (p.vy < config.terminalVelocity) {
-                    p.vy += 0.0013;
+                    p.vy += config.speedFactor;
                 } else {
                     p.vy = config.terminalVelocity;
                 }
@@ -174,6 +174,12 @@ function addAdvancedMarineSnowEffect() {
                 ctx.fillStyle = config.color;
                 ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
                 ctx.fill();
+
+                // const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+                // grad.addColorStop(0, config.color);       // bright center
+                // grad.addColorStop(1, 'transparent');      // fades out
+                // ctx.fillStyle = grad;
+                // ctx.fill();
                 }
         
                 requestAnimationFrame(animate);
@@ -190,15 +196,15 @@ function addAdvancedMarineSnowEffect() {
         originalInit.call(this);
 
         this.createMarineSnowEffect({
-            layers: 10,
-            particleCount: 500,
-            speedFactor: 0.25,
+            layers: 4,
+            particleCount: 300,
+            speedFactor: 0.0015,
             minSize: 2,
             maxSize: 4,
-            blurAmount: '1.6px',
-            opacity: 0.6,
+            blurAmount: '0px',
+            opacity: 0.5,
             color: 'rgba(255, 255, 255, 0.45)',
-            terminalVelocity: 0.4,
+            terminalVelocity: 0.3,
             horizontalDrift: 0.15,
             mouseInfluenceRadius: 90,
             mouseForce: 0.0008

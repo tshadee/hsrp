@@ -1,7 +1,12 @@
 @font-face {
     font-family: 'CMU Serif';
     src: url('../fonts/CMUSerif-Roman.woff2') format('woff2'),
-        url('../fonts/CMUSerif-Roman.woff') format('woff');
+        url('../fonts/CMUSerif-Roman.woff') format('woff'),
+        url('../fonts/MicraC.woff2') format('woff2'),
+        url('../fonts/CaslonAntique.woff') format('woff'),
+        url('../fonts/CaslonAntique.woff2') format('woff2'),
+        url('../fonts/GothamMedium.woff2') format('woff2'),
+        url('../fonts/GothamBold.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -51,7 +56,7 @@
     color: transparent;
     cursor: default;
     user-select: none;
-    padding-bottom: 1rem;
+    padding-bottom: 0.3rem;
 }
 
 

@@ -6,3 +6,58 @@
             transparent 1px,
             transparent 2px);
 }
+
+.project__content {
+    font-family: 'CMU Serif', sans-serif;
+    color: #fcfcfc;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    z-index: 3;
+    /* overflow: auto; */
+}
+
+.project__content-titles {
+    color: #fcfcfc;
+    font-size: 3rem;
+    cursor: pointer;
+    display: inline-block;
+    height:100%;
+    text-decoration: none;
+    padding-right: 3%;
+    align-items: center;
+    transform: scale(1.00);
+}
+
+.center-title {
+    margin:10px;
+    height:100px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#MYOLIGHT-title {
+    font-family: 'MicraC', sans-serif;
+    font-weight: bold;
+    font-size: 3rem;
+    padding: 24px 0;
+}
+
+#TM-sym {
+    font-family: 'MicraC', sans-serif;
+    font-weight: normal;
+}
+
+#cimmeria-title {
+    font-family: 'Caslon Antique', sans-serif;
+}
+
+#spotify-title {
+    font-family: 'Gotham';
+    font-style: bold;
+    font-size: 3.5rem;
+    padding: 20px 0;
+}
