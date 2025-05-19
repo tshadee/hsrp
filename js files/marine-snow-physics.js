@@ -105,8 +105,9 @@ function addAdvancedMarineSnowEffect() {
             const animate = () => {
                 ctx.clearRect(0, 0, width, height);
                 const now = performance.now();
-                const deltaTime = (now - lastTimestamp) / 1000 || 0.016; // default ~60fps
-                lastTimestamp = now;
+                let deltaTime = (now - lastTimestamp) / 1000 || 0.016;
+                deltaTime = Math.min(deltaTime, 0.016); // cap at 50ms (~20fps)
+
 
                 if (mouse.x !== null && mouse.y !== null && prevMouse.x !== null && prevMouse.y !== null) {
                     mouseVelocity.x = (mouse.x - prevMouse.x) / deltaTime;

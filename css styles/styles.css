@@ -77,6 +77,13 @@
     padding-bottom: 0.3rem;
 }
 
+.par-space-half {
+    color: transparent;
+    cursor: default;
+    user-select: none;
+    padding-bottom: 0.1rem;
+}
+
 
 /* Global variables  */
 :root {
