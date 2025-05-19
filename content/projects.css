@@ -1,10 +1,5 @@
 :root {
-    --content-background: linear-gradient(to top, #030303 0%, #352817 100%),
-        repeating-linear-gradient(45deg,
-            rgba(255, 255, 255, 0.01) 0px,
-            rgba(255, 255, 255, 0.01) 1px,
-            transparent 1px,
-            transparent 2px);
+    --base-bg-color: #352817;
 }
 
 .project__content {
@@ -28,22 +23,13 @@
     text-decoration: none;
     padding-right: 3%;
     align-items: center;
-    transform: scale(1.00);
-}
-
-.center-title {
-    margin:10px;
-    height:100px;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
 }
 
 #MYOLIGHT-title {
     font-family: 'MicraC', sans-serif;
     font-weight: bold;
     font-size: 3rem;
-    padding: 24px 0;
+    padding: 30px 0 18px 0;
 }
 
 #TM-sym {

@@ -85,12 +85,6 @@
     --a-duration: 0.45s;
     --y-slide-dist: -20px;
     --anim-offset: 0.23s;
-    --content-background: linear-gradient(to top, #030303 0%, #171935 100%),
-        repeating-linear-gradient(45deg,
-            rgba(255, 255, 255, 0.01) 0px,
-            rgba(255, 255, 255, 0.01) 1px,
-            transparent 1px,
-            transparent 2px);
 }
 
 /* Navigation Bar Section */

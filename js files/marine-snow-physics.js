@@ -9,9 +9,9 @@ function addAdvancedMarineSnowEffect() {
             {
                 ...options,
                 layerId: `marineSnowCanvasLayer${i}`,
-                zIndex: 1 + i,
+                zIndex: 1,
                 opacity: options.opacity * (1 - depth * 0.7), 
-                blurAmount: `calc(${options.blurAmount} * ${0.5 + depth * 1.5})`,
+                blurAmount: `calc(${options.blurAmount} * ${1 + depth * 0.5})`,
                 particleCount: Math.floor(options.particleCount * (1 + depth*0.3)),
                 minSize: options.minSize * (1 - depth * 0.25),
                 maxSize: options.maxSize * (1 - depth * 0.25),
@@ -19,7 +19,6 @@ function addAdvancedMarineSnowEffect() {
                 mouseInfluenceRadius: options.mouseInfluenceRadius * (1 - depth * 0.7),
                 mouseForce: options.mouseForce * (1 - depth * 0.65)
             };
-      
             createMarineSnowLayer(this.mainContainer, layerConfig);
         };
 
@@ -46,12 +45,12 @@ function addAdvancedMarineSnowEffect() {
             canvas.style.width = '100%';
             canvas.style.height = '100%';
             canvas.style.pointerEvents = 'none';
-            canvas.style.zIndex = '1';
+            canvas.style.zIndex = `${config.zIndex}`;
             canvas.style.userSelect = 'none';
             canvas.style.filter = `blur(${config.blurAmount})`;
             canvas.style.opacity = config.opacity.toString();
         
-            container.insertBefore(canvas, container.firstChild);
+            container.appendChild(canvas);
         
             const ctx = canvas.getContext('2d');
         
@@ -165,21 +164,11 @@ function addAdvancedMarineSnowEffect() {
                     Object.assign(p, spawnParticle());
                 }
         
-                // Wrap X
-                // if (p.x > width) p.x = 0;
-                // if (p.x < 0) p.x = width;
-        
                 // Draw
                 ctx.beginPath();
                 ctx.fillStyle = config.color;
                 ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
                 ctx.fill();
-
-                // const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-                // grad.addColorStop(0, config.color);       // bright center
-                // grad.addColorStop(1, 'transparent');      // fades out
-                // ctx.fillStyle = grad;
-                // ctx.fill();
                 }
         
                 requestAnimationFrame(animate);
@@ -202,8 +191,8 @@ function addAdvancedMarineSnowEffect() {
             minSize: 2,
             maxSize: 4,
             blurAmount: '0px',
-            opacity: 0.5,
-            color: 'rgba(255, 255, 255, 0.45)',
+            opacity: 0.6,
+            color: 'rgba(247, 238, 209, 0.5)',
             terminalVelocity: 0.3,
             horizontalDrift: 0.15,
             mouseInfluenceRadius: 90,

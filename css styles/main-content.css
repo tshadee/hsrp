@@ -1,6 +1,7 @@
 .main {
     background-color: #030303;
-    z-index: 3;
+    z-index: 1;
+    position: relative;
 }
 
 .main__container {

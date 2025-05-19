@@ -10,28 +10,22 @@ const ContentLoader = {
   loadedStylesheets: new Set(),
   
   // Current active content
-  currentContent: 'home',
+  currentContent: '',
   
-  defaultBackground: 'linear-gradient(to top, #030303 0%, #171935 100%)',
-  currentBackground: 'linear-gradient(to top, #030303 0%, #171935 100%)',
+  defaultBackground: '#171935',
+  currentBackground: '#171935',
   transitionDuration: 450,  // in ms
   
   // Initialize the content loader
   init: function() {
-    // Store the original home content
-    this.contentCache['home'] = document.querySelector('.main__container').innerHTML;
     
-    // Get the default background from CSS variables
-    const rootStyles = getComputedStyle(document.documentElement);
-    this.defaultBackground = rootStyles.getPropertyValue('--content-background').trim() || this.defaultBackground;
-    this.currentBackground = this.defaultBackground;
-    
-    this.setupMainContainer();     // Modify main container to separate content from background
-    this.createBackgroundElements(0);
+    this.setupMainContainer();    // create main container (with wrapper)
+    this.createBaseBackground();
+    this.createFlatBackground();  // create the bottom gradiented background
     this.setupNavigation();
     this.setupHiddenLinks();
     this.setupSearchBar();
-    
+
     // Add a history state handler
     window.addEventListener('popstate', (event) => {
       if (event.state && event.state.content) {
@@ -41,11 +35,40 @@ const ContentLoader = {
       }
     });
     
+    this.loadContent('home', false);
     // Push initial state
     history.replaceState({ content: 'home' }, 'Home', window.location.pathname);
     
     // Add the standardized animation CSS to the document
     this.addStandardAnimations();
+  },
+
+  createBaseBackground: function () {
+    const baseBg = document.createElement('div');
+    baseBg.className = 'base-background';
+    baseBg.style.position = 'absolute';
+    baseBg.style.top = '0';
+    baseBg.style.left = '0';
+    baseBg.style.width = '100%';
+    baseBg.style.height = '100%';
+    baseBg.style.zIndex = '0';
+    baseBg.style.backgroundColor = this.defaultBackground;
+    baseBg.style.transition = 'background-color 0.4s ease';
+    
+    this.mainContainer.appendChild(baseBg);
+    this.baseBackgroundElement = baseBg; // store reference
+  },
+
+  createFlatBackground:function(){
+    const flat_bg = document.createElement('flat-bg');
+    flat_bg.style.position = 'absolute';
+    flat_bg.style.width = '100%';
+    flat_bg.style.top = '0px';
+    flat_bg.style.left = '0px';
+    flat_bg.style.height = '84vh';
+    flat_bg.style.backgroundImage = 'linear-gradient(to top,rgba(3, 3, 3, 0.99) 0%, rgba(3, 3, 3, 0) 100% ), repeating-linear-gradient(45deg,rgba(255, 255, 255, 0.01) 0px, rgba(255, 255, 255, 0.01) 1px, transparent 1px, transparent 2px)';
+    flat_bg.style.zIndex = '2';
+    this.mainContainer.appendChild(flat_bg);
   },
   
   setupMainContainer: function() {
@@ -72,94 +95,11 @@ const ContentLoader = {
     contentWrapper.style.height = '100%';
     contentWrapper.style.display = 'flex';
     contentWrapper.style.alignItems = 'center';
-    contentWrapper.style.zIndex = '1'; // Above background
+    contentWrapper.style.zIndex = '3'; // Above background
     
     // Store references
     this.mainContainer = mainContainer;
     this.contentWrapper = contentWrapper;
-  },
-
-  createBackgroundElements: function(new_bg) 
-  {
-    // Create a background container if it doesn't exist
-    if (!this.backgroundContainer) {
-      const backgroundContainer = document.createElement('div');
-      backgroundContainer.className = 'background-container';
-      backgroundContainer.style.position = 'absolute';
-      backgroundContainer.style.top = '0';
-      backgroundContainer.style.left = '0';
-      backgroundContainer.style.width = '100%';
-      backgroundContainer.style.height = '100%';
-      backgroundContainer.style.zIndex = '0';
-      
-      this.mainContainer.appendChild(backgroundContainer);
-      this.backgroundContainer = backgroundContainer;
-    }
-    
-    // Initialize the background elements object if needed
-    if (!this.backgroundElements) {
-      this.backgroundElements = {};
-    }
-    
-    // If creating initial backgrounds
-    if (!new_bg) 
-    {
-      // Get all potential content IDs from your navigation
-      const contentIds = ['home'];
-      document.querySelectorAll('[data-dialog]').forEach(link => {
-        contentIds.push(link.getAttribute('data-dialog'));
-      });
-      
-      // Add home background first (will be visible by default)
-      const homeBackground = document.createElement('div');
-      homeBackground.className = 'background background--home background--active';
-      homeBackground.style.position = 'absolute';
-      homeBackground.style.top = '0';
-      homeBackground.style.left = '0';
-      homeBackground.style.width = '100%';
-      homeBackground.style.height = '100%';
-      homeBackground.style.background = this.defaultBackground;
-      homeBackground.style.opacity = '1';
-      homeBackground.style.transition = 'opacity 0.4s ease';
-      
-      this.backgroundContainer.appendChild(homeBackground);
-      this.backgroundElements['home'] = homeBackground;
-      
-      // Add other backgrounds (initially invisible)
-      for (const id of contentIds) {
-        if (id === 'home') continue; // Skip home as we already added it
-        
-        const background = document.createElement('div');
-        background.className = `background background--${id}`;
-        background.style.position = 'absolute';
-        background.style.top = '0';
-        background.style.left = '0';
-        background.style.width = '100%';
-        background.style.height = '100%';
-        background.style.opacity = '0';
-        background.style.transition = 'opacity 0.4s ease';
-        
-        this.backgroundContainer.appendChild(background);
-        this.backgroundElements[id] = background;
-      }
-    }
-  },
-
-  // Method to show the background for a specific content ID
-  showBackground: function(contentId) {
-    // Hide all backgrounds
-    for (const id in this.backgroundElements) {
-      const background = this.backgroundElements[id];
-      background.style.opacity = '0';
-      background.classList.remove('background--active');
-    }
-    
-    // Show the requested background
-    const background = this.backgroundElements[contentId];
-    if (background) {
-      background.style.opacity = '1';
-      background.classList.add('background--active');
-    }
   },
   
   // Add standardized animations that will apply to all content
@@ -282,11 +222,6 @@ const ContentLoader = {
       .content-animated div:nth-of-type(4) {
         animation-delay: calc(var(--anim-offset) * 6);
       }
-
-      /* Background transition */
-      .main__background {
-        transition: background 0.4s ease-in-out;
-      }
     `;
     
     // Create a new style element
@@ -388,19 +323,6 @@ const ContentLoader = {
     }, 500);
   },
   
-  // Extract background from CSS content
-  extractBackgroundGradient: function(cssText) {
-    // Look for background gradient definitions
-    const gradientRegex = /\s*--content-background\s*:\s*([^;]+);/;
-    const match = cssText.match(gradientRegex);
-    
-    if (match && match[1]) {
-      return match[1].trim();
-    }
-    
-    return null;
-  },
-  
   // Load content by ID
   loadContent: function(contentId, updateHistory = true) {
     // Don't reload the same content
@@ -444,35 +366,15 @@ const ContentLoader = {
   },
   
   loadContentCSS: function(contentId) {
-    // For home content, just show the home background
-    if (contentId === 'home') {
-      this.showBackground('home');
-      return Promise.resolve();
-    }
-    
-    // Ensure we have a background element for this content
-    this.ensureBackgroundElement(contentId);
-    
     // Check if we have CSS for this content
     if (this.cssCache[contentId]) {
-      // Extract background gradient if defined
-      const backgroundGradient = this.extractBackgroundGradient(this.cssCache[contentId]);
-      if (backgroundGradient) {
-        // Apply the background gradient to the corresponding element
-        this.backgroundElements[contentId].style.background = backgroundGradient;
-      } else {
-        // If no background defined, use default
-        this.backgroundElements[contentId].style.background = this.defaultBackground;
-      }
-      
-      // Show this background
-      this.showBackground(contentId);
       this.applyContentCSS(contentId, this.cssCache[contentId]);
       return Promise.resolve();
     }
     
     // Try to fetch CSS
-    return fetch(`content/${contentId}.css`)
+    const cssUrl = `content/${contentId}.css?rnd=${Date.now()}`;
+    return fetch(cssUrl)
       .then(response => {
         if (!response.ok) return null;
         return response.text();
@@ -481,28 +383,12 @@ const ContentLoader = {
         if (cssText) {
           // Cache the CSS
           this.cssCache[contentId] = cssText;
-          
-          // Extract and apply background gradient
-          const backgroundGradient = this.extractBackgroundGradient(cssText);
-          if (backgroundGradient) {
-            this.backgroundElements[contentId].style.background = backgroundGradient;
-          } else {
-            this.backgroundElements[contentId].style.background = this.defaultBackground;
-          }
-          
-          // Apply the CSS and show background
+          // Apply the CSS 
           this.applyContentCSS(contentId, cssText);
-          this.showBackground(contentId);
-        } else {
-          // If no CSS, just use default background
-          this.backgroundElements[contentId].style.background = this.defaultBackground;
-          this.showBackground(contentId);
-        }
+        };
       })
       .catch(() => {
-        // On error, use default background
-        this.backgroundElements[contentId].style.background = this.defaultBackground;
-        this.showBackground(contentId);
+        //old background code
       });
   },
   
@@ -538,49 +424,25 @@ const ContentLoader = {
     }
     this.loadedStylesheets.delete(styleId);
   },
-  
-  ensureBackgroundElement: function(contentId) {
-    if (!this.backgroundElements[contentId]) {
-      const background = document.createElement('div');
-      background.className = `background background--${contentId}`;
-      background.style.position = 'absolute';
-      background.style.top = '0';
-      background.style.left = '0';
-      background.style.width = '100%';
-      background.style.height = '100%';
-      background.style.opacity = '0';
-      background.style.transition = 'opacity 0.4s ease';
-      
-      this.backgroundContainer.appendChild(background);
-      this.backgroundElements[contentId] = background;
-    }
-  },
 
   transitionContent: function(newContent, contentId, updateHistory) {
     // Add class for fade out animation to content wrapper
     this.contentWrapper.classList.add('content-fade-out');
     
     // Begin background transition right away
-    if (contentId === 'home') {
-      this.showBackground('home');
-    } else if (this.cssCache[contentId]) {
-      // Background properties should already be set on the element
-      this.showBackground(contentId);
-    } else {
-      // Try to load CSS to set up background
-      this.loadContentCSS(contentId);
+    this.loadContentCSS(contentId);
+    const rootStyles = getComputedStyle(document.documentElement);
+    const newBgColor = rootStyles.getPropertyValue('--base-bg-color').trim() || this.defaultBackground;
+    if (newBgColor) {
+      this.baseBackgroundElement.style.backgroundColor = newBgColor;
     }
-    
+
     // After fade out completes, update content and fade back in
     setTimeout(() => {
-      // Rest of your content transition code...
       
       // If we're changing content, handle CSS management
       if (this.currentContent !== contentId) {
-        // Remove the old content's CSS if it exists and isn't home
-        if (this.currentContent !== 'home') {
-          this.removeContentCSS(this.currentContent);
-        }
+        this.removeContentCSS(this.currentContent);
       }
       
       // Update the content
