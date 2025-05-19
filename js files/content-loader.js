@@ -13,7 +13,6 @@ const ContentLoader = {
   currentContent: '',
   
   defaultBackground: '#171935',
-  currentBackground: '#171935',
   transitionDuration: 450,  // in ms
   
   // Initialize the content loader
