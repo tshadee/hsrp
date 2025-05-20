@@ -1,17 +1,10 @@
 // ContentLoader - A simple content management framework
 const ContentLoader = {
-  // Cache for loaded content
-  contentCache: {},
-  
-  // Cache for loaded CSS
-  cssCache: {},
-  
-  // Track currently loaded CSS files
-  loadedStylesheets: new Set(),
-  
-  // Current active content
-  currentContent: '',
-  
+  contentCache: {},     //cache for loaded content
+  breadcrumbStack: [],  //breadcrumb stack
+  cssCache: {},         //cache for loaded css
+  loadedStylesheets: new Set(), //track currently loaded CSS files
+  currentContent: '', // current active content
   defaultBackground: '#171935',
   transitionDuration: 450,  // in ms
   
@@ -40,6 +33,94 @@ const ContentLoader = {
     
     // Add the standardized animation CSS to the document
     this.addStandardAnimations();
+  },
+
+  updateBreadcrumbs: function(contentId){
+    const existingIndex = this.breadcrumbStack.indexOf(contentId);
+    if (existingIndex !== -1) {
+      this.breadcrumbStack = this.breadcrumbStack.slice(0, existingIndex + 1); //get sliced !!
+    } else {
+      this.breadcrumbStack.push(contentId); // push new item
+    }
+  },
+
+  renderBreadcrumbs:function() 
+  {
+    const container = document.querySelector('.breadcrumb-container');
+    if (!container) return;
+    container.addEventListener('wheel', function(e) 
+    {
+      if (e.deltaY !== 0) {
+          e.preventDefault();
+          this.scrollLeft += e.deltaY;
+      }
+    });
+
+    const existingCrumbs = Array.from(container.querySelectorAll('i')).map(el => el.textContent);
+    const newCrumbs = this.breadcrumbStack.slice();
+
+    let crumbDivIndex = 0; //where the new and old clash - the crumbs diverge!
+    while (crumbDivIndex < existingCrumbs.length && crumbDivIndex < newCrumbs.length && existingCrumbs[crumbDivIndex] === newCrumbs[crumbDivIndex]){
+      crumbDivIndex++;
+    }
+
+    //crumb removal
+    for(let i = crumbDivIndex; i < existingCrumbs.length; i++){
+      const childElemIndex = i*2;
+      const crumbElem = container.children[childElemIndex];
+      const arrowElem = container.children[childElemIndex - 1];
+
+      if(crumbElem){
+        crumbElem.classList.add('breadcrumb-animate-out');
+        crumbElem.classList.remove('breadcrumb-animate-in');
+      };
+
+      if (arrowElem) {
+        arrowElem.classList.add('breadcrumb-animate-out');
+        arrowElem.classList.remove('breadcrumb-animate-in');
+      };
+
+      //remove crumbs after anim done
+      setTimeout(() => {
+        while (container.children.length > (this.breadcrumbStack.length * 2 - 1)) {
+          container.lastChild.remove();
+        }
+      }, 400);
+    };
+
+    const baseDelay = 50; //crumb should load in faster than main page (?) check later anim 
+    let delay = 0;
+
+    for(let i = crumbDivIndex; i < newCrumbs.length; i++)
+    {
+      if (container.children.length > 0) {
+        const arrow = document.createElement('span');
+        arrow.textContent = ' → ';
+        arrow.style.padding = '0px 5px';
+        arrow.style.opacity = '0';
+        arrow.classList.add('breadcrumb-animate-in');
+        arrow.style.animationDelay = `${delay}ms`;
+        arrow.style.zIndex = '1';
+        container.appendChild(arrow);
+      };
+
+      const id = newCrumbs[i];
+      const crumb = document.createElement('i');
+      crumb.textContent = id;
+      crumb.classList.add('normal-link-hyper', 'breadcrumb-animate-in');
+      crumb.style.opacity = '0';
+      crumb.style.animationDelay = `${delay}ms`;
+      crumb.style.zIndex = '1';
+
+      crumb.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.loadContent(id, true);
+      });
+
+      container.appendChild(crumb);
+
+      delay += baseDelay;
+    };
   },
 
   createBaseBackground: function () {
@@ -276,9 +357,7 @@ const ContentLoader = {
           this.transitionContent(content, contentId, updateHistory);
         })
         .catch(error => {
-          console.error('Error loading content:', error);
-          // Optional: Show error message in main container
-          this.contentWrapper.innerHTML = `<div class="main__content"><h1>content missing</h1><p>if you know how to contact me - do so. this is unacceptable !</p><p>once you've done that, go look somewhere else</div>`;
+          console.error('Error loading content:', error); 
         });
     }
   },
@@ -288,6 +367,9 @@ const ContentLoader = {
     return fetch(`content/${contentId}.html`)
       .then(response => {
         if (!response.ok) {
+          let currentBg = this.baseBackgroundElement.style.backgroundColor;
+          this.baseBackgroundElement.style.backgroundColor = '#550000';
+          setTimeout(() => { this.baseBackgroundElement.style.backgroundColor = currentBg; }, 600);
           throw new Error('Content not found');
         }
         return response.text();
@@ -361,6 +443,8 @@ const ContentLoader = {
   transitionContent: function(newContent, contentId, updateHistory) {
     // Add class for fade out animation to content wrapper
     this.contentWrapper.classList.add('content-fade-out');
+    this.updateBreadcrumbs(contentId);
+    this.renderBreadcrumbs();
     
     // Begin background transition right away
     this.loadContentCSS(contentId);

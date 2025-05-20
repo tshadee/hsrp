@@ -52,11 +52,67 @@
     transform: scale(1.00);
     display: inline-block;
     transition: all 0.4s ease-in-out;
-    /* border-bottom: 2px dashed rgba(255, 138, 138, 0.3); */
 }
 
 .normal-link-hyper:hover {
     color: #8aadff;
     transform: scale(1.02);
-    /* border-bottom: 2px dashed rgba(255, 138, 138, 0); */
+}
+
+
+/* Breadcrumb css stuff */
+.breadcrumb-container{
+    background-image: linear-gradient(to right,#030303 0%, #0a0a0a 50%, #030303 100%);
+    color: #e3e3e3;
+    border: none;
+    position: absolute;
+    display: flex;
+    height: 8vh;
+    width: 30vw;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    font-size: 1.5rem;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    padding-left: 20px;
+    padding-right: 20px;
+    white-space: nowrap;
+    z-index: 3;
+}
+
+.breadcrumb-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+
+@keyframes breadcrumbFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-7px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes breadcrumbFadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-7px);
+    }
+}
+
+.breadcrumb-animate-in {
+    animation: breadcrumbFadeIn 0.4s ease-in-out forwards;
+}
+
+.breadcrumb-animate-out {
+    animation: breadcrumbFadeOut 0.4s ease-in-out forwards;
 }
