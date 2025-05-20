@@ -48,6 +48,8 @@ const ContentLoader = {
   {
     const container = document.querySelector('.breadcrumb-container');
     if (!container) return;
+
+    //scroll fix (vertical to horizontal scroll)
     container.addEventListener('wheel', function(e) 
     {
       if (e.deltaY !== 0) {
@@ -56,6 +58,7 @@ const ContentLoader = {
       }
     });
 
+    //breadcrumby logic (logic is crumbling as well! ! !)
     const existingCrumbs = Array.from(container.querySelectorAll('i')).map(el => el.textContent);
     const newCrumbs = this.breadcrumbStack.slice();
 
@@ -121,6 +124,14 @@ const ContentLoader = {
 
       delay += baseDelay;
     };
+
+    //auto scroll to latest addition
+    requestAnimationFrame(() => {
+      container.scrollTo({
+        left: container.scrollWidth,
+        behavior: 'smooth'
+      });
+    });
   },
 
   createBaseBackground: function () {
