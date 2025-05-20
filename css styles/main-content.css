@@ -78,12 +78,14 @@
     cursor: pointer;
     transform: scale(1);
     display: inline-block;
+    filter: blur(1);
     border-bottom: 2px dashed rgba(255, 138, 138, 0.3);
 }
 
 .hidden-link-red:hover {
     color: #ff8a8a;
     transform: scale(1.02);
+    filter: blur(0);
     transition: all 0.4s ease-in-out;
     border-bottom: 2px dashed rgba(255, 138, 138, 0);
 }
