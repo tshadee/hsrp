@@ -141,11 +141,11 @@ const ContentLoader = {
         height: 100%;
         display: flex;
         align-items: center;
-        pointer-events: none; /* Allow clicks to pass through */
+        pointer-events: none; /* allow clicks to pass through */
       }
       
       .main__content-wrapper * {
-        pointer-events: auto; /* Re-enable clicks for children */
+        pointer-events: auto; /* re-enable clicks for children */
       }
       
       .content-fade-out {
@@ -154,72 +154,6 @@ const ContentLoader = {
       
       .content-fade-in {
         animation: contentFadeInUp 0.25s ease-in-out forwards;
-      }
-
-      /* Content Animations */
-      .content-animated h1 {
-        opacity: 0;
-        animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
-        animation-delay: var(--anim-offset);
-      }
-      
-      .content-animated p {
-        opacity: 0;
-        animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
-      }
-      
-      .content-animated p:nth-of-type(1) {
-        animation-delay: calc(var(--anim-offset) * 2);
-        margin-bottom: 1rem;
-      }
-      
-      .content-animated p:nth-of-type(2) {
-        animation-delay: calc(var(--anim-offset) * 2.5);
-      }
-      
-      .content-animated p:nth-of-type(3) {
-        animation-delay: calc(var(--anim-offset) * 3);
-      }
-      
-      .content-animated p:nth-of-type(4) {
-        animation-delay: calc(var(--anim-offset) * 3.5);
-      }
-      
-      .content-animated p:nth-of-type(5) {
-        animation-delay: calc(var(--anim-offset) * 4);
-      }
-
-      .content-animated p:nth-of-type(6) {
-        animation-delay: calc(var(--anim-offset) * 4.5);
-      }
-
-      .content-animated p:nth-of-type(7) {
-        animation-delay: calc(var(--anim-offset) * 5);
-      }
-
-      .content-animated p:nth-of-type(8) {
-        animation-delay: calc(var(--anim-offset) * 5.5);
-      }
-      
-      .content-animated div:not(.main__content) {
-        opacity: 0;
-        animation: fadeSlideIn var(--a-duration) ease-in-out forwards;
-      }
-      
-      .content-animated div:nth-of-type(1) {
-        animation-delay: calc(var(--anim-offset) * 4.5);
-      }
-      
-      .content-animated div:nth-of-type(2) {
-        animation-delay: calc(var(--anim-offset) * 5);
-      }
-      
-      .content-animated div:nth-of-type(3) {
-        animation-delay: calc(var(--anim-offset) * 5.5);
-      }
-
-      .content-animated div:nth-of-type(4) {
-        animation-delay: calc(var(--anim-offset) * 6);
       }
     `;
     
@@ -450,9 +384,21 @@ const ContentLoader = {
       // Get the main content div
       const mainContent = this.contentWrapper.querySelector('.main__content');
       
-      // Add class for standardized animations
+      // procedural animation
       if (mainContent) {
-        mainContent.classList.add('content-animated');
+        const animatableSelectors = ['h1', 'h2', 'p', 'ul', 'ol', 'li', 'img', 'a'];
+        const elements = mainContent.querySelectorAll(animatableSelectors.join(', '));
+        
+        const baseDelay = 85; // ms
+        const animationDuration = 400; // ms
+        let delay = 0;
+        
+        elements.forEach((el) => {
+          el.style.opacity = '0';
+          el.style.animation = `fadeSlideIn ${animationDuration}ms ease-in-out forwards`;
+          el.style.animationDelay = `${delay}ms`;
+          delay += baseDelay;
+        });
       }
       
       // Remove the fade out class and add fade in
