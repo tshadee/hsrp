@@ -324,7 +324,7 @@ const ContentLoader = {
         event.preventDefault();
         const query = searchInput.value.trim().toLowerCase();
         if(!query) return;
-        const testQuery = `content/${query}.html`;
+        const testQuery = `content/html/${query}.html`;
         fetch(testQuery)
         .then(response => {
           if(response.ok) {
@@ -375,7 +375,7 @@ const ContentLoader = {
   
   // Fetch content from server
   fetchContent: function(contentId) {
-    return fetch(`content/${contentId}.html`)
+    return fetch(`content/html/${contentId}.html`)
       .then(response => {
         if (!response.ok) {
           let currentBg = this.baseBackgroundElement.style.backgroundColor;
@@ -399,7 +399,7 @@ const ContentLoader = {
     }
     
     // Try to fetch CSS
-    const cssUrl = `content/${contentId}.css?rnd=${Date.now()}`;
+    const cssUrl = `content/css/${contentId}.css?rnd=${Date.now()}`;
     return fetch(cssUrl)
       .then(response => {
         if (!response.ok) return null;
