@@ -1,0 +1,15 @@
+:root{
+    --base-bg-color: #002801;
+}
+
+#spotify-title {
+    font-family: 'Gotham';
+    font-style: bold;
+    font-size: 3.5rem;
+    padding: 20px 0;
+    color: #1ED760;
+}
+
+.normal-link-hyper.green-hyper:hover{
+    color: #1ED760;
+}

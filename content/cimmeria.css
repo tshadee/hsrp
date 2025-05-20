@@ -1,5 +1,9 @@
 :root {
-    --base-bg-color: #350505;
+    --base-bg-color: #846415;
+}
+
+.cimmeria-caslon {
+    font-family: 'Caslon Antique', sans-serif;
 }
 
 #cimmeria-title {
