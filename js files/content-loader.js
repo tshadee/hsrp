@@ -1,4 +1,4 @@
-// ContentLoader - A simple content management framework
+// content management framework
 const ContentLoader = {
   contentCache: {},     //cache for loaded content
   breadcrumbStack: [],  //breadcrumb stack
