@@ -35,6 +35,34 @@ const ContentLoader = {
     this.addStandardAnimations();
   },
 
+  preloadContent: function(contentId){
+    if(!this.contentCache[contentId]){ //check html cache
+      fetch(`content/html/${contentId}.html`)
+        .then(response => {
+          if(response.ok){ return response.text();}
+          throw new Error(`Failed to preload HTML for ${contentId}.html`);
+        })
+        .then(html => {
+          this.contentCache[contentId] = html;
+          console.log(`Preloaded HTML ${contentId}.html`);
+        })
+        .catch(error => console.error(`Preload HTML error for ${contentId}.html:`, error))
+    }
+    
+    if(!this.cssCache[contentId]){ //check css cache
+      fetch(`content/css/${contentId}.css?rnd=${Date.now()}`) //aggressively clear browser cache 
+      .then(response => {
+        if(response.ok){ return response.text();}
+        throw new Error(`Failed to preload CSS for ${contentId}.css`);
+      })
+      .then(cssText =>{
+        this.cssCache[contentId] = cssText;
+        console.log(`Preloaded CSS ${contentId}.css`);
+      })
+      .catch(error => console.error(`Preload CSS error for ${contentId}.css:`, error))
+    }
+  },
+
   updateBreadcrumbs: function(contentId){
     const existingIndex = this.breadcrumbStack.indexOf(contentId);
     if (existingIndex !== -1) {
@@ -262,9 +290,10 @@ const ContentLoader = {
   setupNavigation: function() {
     const navLinks = document.querySelectorAll('[data-dialog]');
     navLinks.forEach(link => {
+      const contentId = link.getAttribute('data-dialog');
+      this.preloadContent(contentId);
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        const contentId = link.getAttribute('data-dialog');
         this.loadContent(contentId, true);
       });
     });
@@ -272,6 +301,7 @@ const ContentLoader = {
     // Home link
     const homeLink = document.querySelector('#navbar__logo');
     if (homeLink) {
+      this.preloadContent('home');
       homeLink.addEventListener('click', (e) => {
         e.preventDefault();
         this.loadContent('home', true);
@@ -286,32 +316,31 @@ const ContentLoader = {
       // Remove any existing click handlers to prevent duplicates
       const clone = link.cloneNode(true);
       link.parentNode.replaceChild(clone, link);
-      
-      clone.addEventListener('click', (e) => {
-        e.preventDefault();
-        // Get the text content of the link to use as the content ID
-        const contentId = clone.textContent.trim().toLowerCase();
-        if(!contentId)
-        {
-          contentId = clone.getAttribute('data-dialog');
-        }
-        this.loadContent(contentId, true);
-      });
+
+      const contentId = clone.textContent.trim().toLowerCase() || clone.getAttribute('data-dialog');
+      if(contentId){
+        this.preloadContent(contentId);
+        clone.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.loadContent(contentId, true);
+        });
+      };
     });
+
     const hiddenLinksRed = this.contentWrapper.querySelectorAll('.hidden-link-red');
     hiddenLinksRed.forEach(link => {
       // Remove any existing click handlers to prevent duplicates
       const clone = link.cloneNode(true);
       link.parentNode.replaceChild(clone, link);
-      
-      clone.addEventListener('click', (e) => {
-        e.preventDefault();
-        // Get the text content of the link to use as the content ID
-        contentId = clone.getAttribute('data-dialog');
-        this.loadContent(contentId, true);
-      });
+      const contentId = clone.getAttribute('data-dialog');
+      if(contentId){
+        this.preloadContent(contentId);
+        clone.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.loadContent(contentId, true);
+        });
+      }
     });
-
   },
 
   setupSearchBar: function() {
