@@ -1,3 +1,59 @@
 :root {
     --base-bg-color: #17351e;
 }
+
+.main__container {
+    align-items: normal;
+}
+
+.three__columns__container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    justify-content: center;
+}
+
+.three__columns__container p {
+    font-size: 1.2rem
+}
+
+#subheader {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0.7rem;
+}
+
+#subsubheader{
+    font-size: 1rem;
+}
+
+.border-box {
+    border-style: dashed;
+    border-width: 1px;
+    border-color: #dbdbdb64;
+    border-radius: 3px;
+    padding: 0.5vw;
+    margin: 0.5vw;
+    width: clamp(200px, 100%, 100%);
+    justify-self: center;
+}
+
+.left-most-col {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: justify;
+    padding: 0.25vw;
+    height: 65vh;
+}
+
+.middle-col {
+    text-align: justify;
+    padding: 0.25vw;
+    height: 65vh;
+}
+
+.right-col {
+    text-align: justify;
+    padding: 0.25vw;
+    height: 65vh;
+}

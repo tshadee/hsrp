@@ -39,7 +39,7 @@ const ContentLoader = {
 
   preloadContent: function(contentId){
     if(!this.contentCache[contentId]){ //check html cache
-      fetch(`content/html/${contentId}.html`)
+      fetch(`content/html/${contentId}.html?rnd=${Date.now()}`)
         .then(response => {
           if(response.ok){ return response.text();}
           throw new Error(`Failed to preload HTML for ${contentId}.html`);
@@ -58,7 +58,7 @@ const ContentLoader = {
         throw new Error(`Failed to preload CSS for ${contentId}.css`);
       })
       .then(cssText =>{
-        this.cssCache[contentId] = cssText;
+        this.cssCache[contentId] = cssText;   //need to parse css for js file path
         console.log(`Preloaded CSS ${contentId}.css`);
       })
       .catch(error => console.error(`Preload CSS error for ${contentId}.css:`, error))
@@ -406,7 +406,7 @@ const ContentLoader = {
   
   // Fetch content from server
   fetchContent: function(contentId) {
-    return fetch(`content/html/${contentId}.html`)
+    return fetch(`content/html/${contentId}.html?rnd=${Date.now()}`)
       .then(response => {
         if (!response.ok) {
           let currentBg = this.baseBackgroundElement.style.backgroundColor;

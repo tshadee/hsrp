@@ -111,4 +111,5 @@
     grid-template-columns: 2fr 1fr;
     column-gap: 10px;
     height: 84vh;
+    align-items: center;
 }

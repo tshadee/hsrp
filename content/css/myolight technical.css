@@ -1,0 +1,10 @@
+:root {
+    --base-bg-color: #2c474e;
+}
+
+#myolight-title {
+    font-family: 'MicraC', sans-serif;
+    font-weight: bold;
+    font-size: 4rem;
+    padding: 30px 0 18px 0;
+}
