@@ -1,9 +1,11 @@
 // content management framework
 const ContentLoader = {
-  contentCache: {},     //cache for loaded content
+  contentCache: {},     //cache for loaded content    (implement FIFO soon)
   breadcrumbStack: [],  //breadcrumb stack
-  cssCache: {},         //cache for loaded css
-  loadedStylesheets: new Set(), //track currently loaded CSS files
+  cssCache: {},         //cache for loaded css        (implement FIFO soon)
+  jsCache: {},          //cache for loaded JS scripts (implement FIFO soon)
+  loadedStylesheets: new Set(), //track loaded CSS files
+  loadedJSScripts: new Set(),   //track loaded JS scripts
   currentContent: '', // current active content
   defaultBackground: '#171935',
   transitionDuration: 450,  // in ms
@@ -494,6 +496,10 @@ const ContentLoader = {
       this.baseBackgroundElement.style.backgroundColor = newBgColor;
     }
 
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }    
+
     // After fade out completes, update content and fade back in
     setTimeout(() => {
       
@@ -510,18 +516,21 @@ const ContentLoader = {
       
       // procedural animation
       if (mainContent) {
-        const animatableSelectors = ['h1', 'h2', 'p', 'ul', 'ol', 'li', 'img', 'a'];
+        const animatableSelectors = ['h1', 'h2', 'p', 'ul', 'ol', 'li', 'img'];
         const elements = mainContent.querySelectorAll(animatableSelectors.join(', '));
+
+        const maxDelay = 300; //ms
+        let delayFromLength = clamp(40, maxDelay / elements.length, 100);
         
         const baseDelay = 85; // ms
-        const animationDuration = 400; // ms
+        const animationDuration = 350; // ms
         let delay = 0;
         
         elements.forEach((el) => {
           el.style.opacity = '0';
           el.style.animation = `fadeSlideIn ${animationDuration}ms ease-in-out forwards`;
           el.style.animationDelay = `${delay}ms`;
-          delay += baseDelay;
+          delay += delayFromLength;
         });
       }
       
