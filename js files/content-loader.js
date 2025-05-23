@@ -6,6 +6,7 @@ const ContentLoader = {
   jsCache: {},          //cache for loaded JS scripts (implement FIFO soon)
   loadedStylesheets: new Set(), //track loaded CSS files
   loadedJSScripts: new Set(),   //track loaded JS scripts
+  activeJSModules: new Map(),   //track active JS scripts
   currentContent: '', // current active content
   defaultBackground: '#171935',
   transitionDuration: 450,  // in ms
@@ -35,6 +36,135 @@ const ContentLoader = {
     
     // Add the standardized animation CSS to the document
     this.addStandardAnimations();
+  },
+
+  loadContentJS: function(contentId){
+    if(!this.cssCache[contentId]) return Promise.resolve();
+
+    const jsPaths = this.extractJSPaths(this.cssCache[contentId]);
+
+    if(jsPaths.length == 0) return Promise.resolve();
+
+    const loadPromises = jsPaths.map(jsPath => this.loadJSFile(contentId, jsPath));
+
+    return Promise.all(loadPromises);
+  },
+
+  cleanupContentJS: function(contentId) {
+    // Find all scripts for this content and clean them up
+    for (const [scriptId, cleanupFn] of this.activeJSModules.entries()) {
+      if (scriptId.includes(`content-js-${contentId}-`)) {
+        try {
+          if (typeof cleanupFn === 'function') {
+            cleanupFn();
+          }
+          this.activeJSModules.delete(scriptId);
+          this.loadedJSScripts.delete(scriptId);
+          
+          // Clean up global cleanup object
+          const cleanupObjName = `ContentLoaderJSCleanup_${scriptId}`;
+          if (window[cleanupObjName]) {
+            delete window[cleanupObjName];
+          }
+        } catch (error) {
+          console.error(`Error during JS cleanup for ${scriptId}:`, error);
+        }
+      }
+    }
+  },
+
+  executeJS: function(contentId,scriptId,jsCode){
+    try {
+      // Create a wrapper that provides access to contentId and cleanup
+      const wrappedCode = `
+        (function(contentId, cleanup) {
+          // Module cleanup function that gets called when content changes
+          let moduleCleanup = null;
+          
+          // Register cleanup function
+          function onCleanup(cleanupFn) {
+            moduleCleanup = cleanupFn;
+          }
+          
+          // Store cleanup function for later use
+          cleanup.register = function() {
+            return moduleCleanup;
+          };
+          
+          // Actual JS code starts here:
+          ${jsCode}
+          
+        })('${contentId}', window.ContentLoaderJSCleanup_${scriptId});
+      `;
+      
+      // Create cleanup object
+      window[`ContentLoaderJSCleanup_${scriptId}`] = {
+        register: function() { return null; }
+      };
+      
+      // Execute the wrapped code
+      eval(wrappedCode);
+      
+      // Store the cleanup function
+      const cleanupFn = window[`ContentLoaderJSCleanup_${scriptId}`].register();
+      if (cleanupFn) {
+        this.activeJSModules.set(scriptId, cleanupFn);
+      }
+      
+      this.loadedJSScripts.add(scriptId);
+      console.log(`Executed JS for content: ${contentId}, script: ${scriptId}`);
+      
+    } catch (error) {
+      console.error(`Error executing JS for ${scriptId}:`, error);
+    }
+  },
+
+  loadJSFile: function(contentId, jsPath) {
+    const fullPath = jsPath.startsWith('http')? jsPath: `content/js/${jsPath}`;
+    const scriptId = `content-js-${contentId}-${jsPath.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+    if (this.loadedJSScripts.has(scriptId)) return Promise.resolve();
+
+    return new Promise((resolve,reject) => {
+
+      //if in cache, execute
+      if (this.jsCache[fullPath]) {
+        this.executeJS(contentId, scriptId, this.jsCache[fullPath]);
+        resolve();
+        return;
+      }
+
+      //if not, fetch and execute (holy von neumann ahh)
+      fetch(`${fullPath}?rnd=${Date.now()}`)
+      .then(response => {
+        if(!response.ok){
+          throw new Error(`Failed to fetch: ${fullPath}`);
+        }
+        return response.text();
+      })
+      .then(jsCode => {
+        this.jsCache[fullPath] = jsCode; //cache the code
+        this.executeJS(contentId,scriptId,jsCode);
+        resolve();
+      })
+      .catch(error => {
+        console.error(`Error fetch execute "${fullPath}":`, error);
+        reject(error);
+      })
+    })
+  },
+
+  // extract JS paths from CSS custom properties
+  extractJSPaths: function(cssText) {
+    const jsPaths = [];
+    const jsPathRegex = /--js-path(?:-\d+)?\s*:\s*['"]([^'"]+)['"]/g; //EEE!!!  EWWW!! REGEX!!!
+    let match;
+    
+    while ((match = jsPathRegex.exec(cssText)) !== null) {
+      jsPaths.push(match[1]);
+    }
+    
+    return jsPaths;
   },
 
   preloadContent: function(contentId){
@@ -426,7 +556,7 @@ const ContentLoader = {
     // Check if we have CSS for this content
     if (this.cssCache[contentId]) {
       this.applyContentCSS(contentId, this.cssCache[contentId]);
-      return Promise.resolve();
+      return this.loadContentJS(contentId);
     }
     
     // Try to fetch CSS
@@ -442,10 +572,12 @@ const ContentLoader = {
           this.cssCache[contentId] = cssText;
           // Apply the CSS 
           this.applyContentCSS(contentId, cssText);
+          // Load associated JS files
+          return this.loadContentJS(contentId);
         };
       })
-      .catch(() => {
-        //old background code
+      .catch((error) => {
+        console.error(`Failed to load content (LCCSS) of ${contentId}:`, error);
       });
   },
   
@@ -503,9 +635,10 @@ const ContentLoader = {
     // After fade out completes, update content and fade back in
     setTimeout(() => {
       
-      // If we're changing content, handle CSS management
+      // if changing content, handle content management
       if (this.currentContent !== contentId) {
-        this.removeContentCSS(this.currentContent);
+        this.removeContentCSS(this.currentContent); //clean up css
+        this.cleanupContentJS(this.currentContent); //clean up JS
       }
       
       // Update the content
