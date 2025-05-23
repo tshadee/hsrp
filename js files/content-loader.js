@@ -144,6 +144,7 @@ const ContentLoader = {
 
       // Create a wrapper that provides access to contentId and cleanup
       const wrappedCode = `
+      //NOTE THAT THIS IS AN IIFE, DO NOT WRAP WITH FUNC(), USE EVAL()
         (function(contentId, cleanup) {
           "use strict";
           
@@ -160,9 +161,14 @@ const ContentLoader = {
             return moduleCleanup;
           };
           
-          // Actual JS code starts here:
           try {
-            ${jsCode}
+
+          //INJECTED CODE
+
+          ${jsCode}
+
+          //END OF INJECTION
+
           } catch (moduleError) {
             console.error('Error in module code for ${scriptId}:', moduleError);
             throw moduleError;
