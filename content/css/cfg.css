@@ -1,3 +1,32 @@
 :root{
     --base-bg-color: #000000;
+    --js-path: "var_binder.js";
+}
+
+.config-section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #dbdbdb;
+}
+
+.config-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.config-item label {
+    min-width: 150px;
+}
+
+.config-item input[type="range"] {
+    flex: 1;
+}
+
+.config-item span {
+    min-width: 60px;
+    font-weight: bold; 
 }
