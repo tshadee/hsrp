@@ -113,3 +113,10 @@
     height: 84vh;
     align-items: center;
 }
+
+.main__content p.revision-mark {
+    color: #cccccca9;
+    font-size: 1rem;
+    margin-top: 2rem;
+    text-align: left;
+}
