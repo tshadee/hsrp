@@ -574,9 +574,8 @@ const ContentLoader = {
       const clone = link.cloneNode(true);
       link.parentNode.replaceChild(clone, link);
 
-      const contentId =
-        clone.textContent.trim().toLowerCase() ||
-        clone.getAttribute("data-dialog");
+      const contentId = clone.getAttribute("data-dialog") ? clone.getAttribute("data-dialog") : clone.textContent.trim().toLowerCase(); //prioritise data-dialog
+
       if (contentId) {
         this.preloadContent(contentId);
         clone.addEventListener("click", (e) => {

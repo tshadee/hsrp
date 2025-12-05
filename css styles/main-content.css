@@ -48,7 +48,7 @@
 
 .hidden-link {
     text-decoration: none;
-    color: #d3e0ff;
+    color: #d3e0ff00;
     position: relative;
     opacity: 1;
     text-decoration: none;
@@ -69,7 +69,7 @@
 
 .hidden-link-red {
     text-decoration: none;
-    color: #ffcfcf;
+    color: #ffcfcf00;
     position: relative;
     opacity: 1;
     text-decoration: none;

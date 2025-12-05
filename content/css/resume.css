@@ -8,7 +8,7 @@
 
 .three__columns__container {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 1fr 1fr;
     justify-content: center;
 }
 
@@ -29,12 +29,32 @@
 .border-box {
     border-style: dashed;
     border-width: 1px;
-    border-color: #dbdbdb64;
+    border-color: #dbdbdb41;
     border-radius: 3px;
     padding: 0.5vw;
     margin: 0.5vw;
     width: clamp(200px, 100%, 100%);
     justify-self: center;
+    background-color: #00000000;
+    backdrop-filter: blur(0px);
+    transform: scale(1.00);
+    transition: all ease-out 0.3s;
+}
+
+.border-box:hover{
+    border-style: solid;
+    cursor: pointer;
+    border-width: 0.7px;
+    border-color: #dbdbdb98;
+    backdrop-filter: blur(3.5px);
+    background-color: #31313167;
+    transform: scale(1.02);
+    transition: all ease-out 0.3s;
+}
+
+.border-box.logo-grid {
+    display: inline-grid; 
+    grid-template-columns: 0.5fr 2.5fr;
 }
 
 .left-most-col {
@@ -56,4 +76,17 @@
     text-align: justify;
     padding: 0.25vw;
     height: 65vh;
+}
+
+.logo-embedded {
+    display: flex;
+    width: clamp(80px,8vh,200px);
+    margin: clamp(5px,0.5vh,20px);
+    object-fit: contain;
+    position: relative;
+    align-items: center;
+}
+
+.date-time{
+    color: #dbdbdb8e;
 }
