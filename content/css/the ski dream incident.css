@@ -1,0 +1,13 @@
+.main__content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    height:80vh;
+    mask-image: linear-gradient(
+        to bottom, 
+        transparent, 
+        black 3%, 
+        black 92%, 
+        transparent
+    )
+}
