@@ -120,3 +120,8 @@
     margin-top: 2rem;
     text-align: left;
 }
+
+.at-location {
+    color: #dbdbdbb7;
+    font-size: clamp(5px, 2rem,  70px);
+}

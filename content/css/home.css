@@ -34,21 +34,24 @@
     border-width: 1px;
     border-color: #dbdbdb64;
     border-radius: 3px;
+    backdrop-filter: blur(0px);
     padding: 0.5vw;
     margin: 0.5vw;
     color: #dbdbdbc0;
     font-family: 'Courier New', Courier, monospace;
     opacity: 0.02;
-    transition: opacity 1.0s ease-in-out;
+    transition: all 1.0s ease-in-out;
     height: 40vh;
     overflow-y: auto;
     overflow-x: hidden;
     scroll-behavior: smooth;
-    scrollbar-width: 0.5px;
+    scrollbar-width: 0.25px;
 }
 
 .right-col-home:hover{
     opacity: 1.0;
+    backdrop-filter: blur(3.5px);
+    transition: all 1.0s ease-in-out;
 }
 
 .right-col-home p {

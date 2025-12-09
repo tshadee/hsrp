@@ -12,8 +12,9 @@
 }
 
 .navbar__container {
-    display: flex;
+    display: inline-grid;
     justify-content: space-between;
+    grid-template-columns: 0.5fr 2.5fr 1fr;
     height: 8vh;
     z-index: 1;
     width: clamp(300px, 100%, 100%);
@@ -56,6 +57,7 @@
     align-items: center;
     justify-items: center;
     text-align: center;
+    margin-right: 10px;
 }
 
 .search-bar{
